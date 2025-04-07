@@ -1,0 +1,185 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --button-bg: #f0f0f0;
+    --button-text: #000000;
+    --button-border: #cccccc;
+  }
+  
+  body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --button-bg: #333333;
+    --button-text: #ffffff;
+    --button-border: #555555;
+  }
+  
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    padding-top: 60px;
+  }
+  
+  h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+  }
+  
+  .brand-title span {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+  .brand-line {
+    font-family: 'Playfair Display', serif;
+   
+    letter-spacing: 1px;
+    font-weight: 700;
+  
+  }
+  
+  
+  .brand-title img {
+    height: 70px;
+    margin-right: 10px;
+  }
+  
+  .toggle-btns {
+    margin: 30px auto;
+    display: flex;
+    justify-content: left;
+    gap: 10px;
+    margin-left: 20%;
+  }
+  
+  .toggle-btns button {
+    border-radius: 8px;
+    padding: 10px 30px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .theme-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--button-bg);
+    color: var(--button-text);
+    border: 1px solid var(--button-border);
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .theme-toggle:hover {
+    background-color: gray;
+    color: #fff;
+  }
+  
+  .upload-result-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+  
+  .upload-box {
+    border: 2px dashed #555;
+    border-radius: 15px;
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.03);
+    flex: 1 1 300px;
+  }
+  
+  .upload-box input,
+  .upload-box button,
+  .upload-box textarea {
+    margin-top: 15px;
+  }
+  
+  .upload-btn {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 1px solid var(--button-border);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+  
+  .upload-btn:hover {
+    background-color: gray;
+    color: #fff;
+    border-color: beige;
+  }
+  
+  .result-box {
+    flex: 1 1 300px;
+    max-width: 400px;
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    display: none;
+    transition: all 0.3s ease;
+  }
+  
+  .result-box.show {
+    display: block;
+  }
+  
+  .result-box img {
+    margin-top: 20px;
+    max-width: 200px;
+  }
+  
+  a.code-link, #codeDisplay {
+    color: rgb(15, 0, 223);
+    word-break: break-word;
+    font-weight: 300;
+  }
+  .btn-cpy{
+color: red;
+  }
+
+  .home-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    background-color: #000;
+    color: #fff;
+    border: none;
+  }
+  
+  .home-btn:hover {
+    background-color: #444;
+    color: #fff;
+  }
+  
+  body.dark-mode .home-btn {
+    background-color: #fff;
+    color: #000;
+  }
+  
+  body.dark-mode .home-btn:hover {
+    background-color: #ccc;
+    color: #000;
+  }
+  

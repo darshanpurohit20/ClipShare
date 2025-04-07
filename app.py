@@ -9,7 +9,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-data_store = {}  # In-memory store for simplicity
+data_store = {}  
 
 @app.route('/')
 def index():
@@ -55,5 +55,5 @@ def generate_qr(code):
 
 if __name__ == '__main__':
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5001))
     app.run(host='0.0.0.0', port=port, debug=True)

@@ -1,50 +1,79 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>ClipShare</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ClipShare</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" type="image/png" href="/static/images/logow.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <h2>Upload Text</h2>
-    <form id="textForm">
-        <textarea name="text" rows="5" cols="30"></textarea><br>
-        <button type="submit">Upload Text</button>
-    </form>
+  <button id="theme-toggle" class="theme-toggle">
+    <i id="theme-icon" class="fas fa-moon"></i>
+  </button>
 
-    <h2>Upload File</h2>
-    <form id="fileForm" enctype="multipart/form-data">
-        <input type="file" name="file"><br>
-        <button type="submit">Upload File</button>
-    </form>
+  <h1 class="brand-title">
+    <img id="clipshare-logo" class="img" src="/static/images/logow.png">
+    <span>ClipShare</span>
+  </h1>
 
-    <div id="result"></div>
+  <p class="brand-line">Anonymous file & text sharing via code or QR</p>
 
-    <script>
-        document.getElementById('textForm').onsubmit = async function(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const res = await fetch('/upload_text', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await res.json();
-            document.getElementById('result').innerHTML = 
-                'Code: ' + data.code + '<br>' +
-                '<img src="/qr/' + data.code + '" alt="QR Code">';
-        }
+  <div class="toggle-btns">
+    <button class="btn btn-light" onclick="showSend()">Send</button>
+    <button class="btn btn-dark border border-light" onclick="showReceive()">Receive</button>
+  </div>
 
-        document.getElementById('fileForm').onsubmit = async function(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const res = await fetch('/upload_file', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await res.json();
-            document.getElementById('result').innerHTML = 
-                'Code: ' + data.code + '<br>' +
-                '<img src="/qr/' + data.code + '" alt="QR Code">';
-        }
-    </script>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+
+      <div class="col-md-5">
+   
+        <div class="upload-box" id="sendBox">
+          <form id="fileForm">
+            <label for="file" class="form-label">Upload File</label>
+            <input type="file" id="file" name="file" class="form-control">
+            <button class="upload-btn" type="submit">Upload File</button>
+          </form>
+
+          <form id="textForm">
+            <label for="text" class="form-label mt-3">Paste Text</label>
+            <textarea id="text" name="text" class="form-control" rows="4" placeholder="Paste your text here..."></textarea>
+            <button class="upload-btn" type="submit">Upload Text</button>
+          </form>
+        </div>
+
+   
+        <div class="upload-box d-none" id="receiveBox">
+          <h5 class="text-center">Enter the Code</h5>
+          <input type="text" id="receiveCode" class="form-control my-3" placeholder="Enter code here...">
+          <button class="btn btn-dark border border-light w-100" onclick="receiveContent()">Receive</button>
+          <p id="receiveError" class="text-danger mt-2 d-none text-center">Invalid code or content not found.</p>
+        </div>
+      </div>
+
+    
+      <div class="col-md-5 d-flex align-items-center justify-content-center">
+        <div id="result" class="text-center d-none">
+          <h5>🔗 Share this Link:</h5>
+          <p id="codeDisplay" class="code-link"></p>
+          <button id="copyBtn" class="btn btn-dark border border-light">Copy Link</button>
+          <span id="copyMsg" class="text-success d-none ms-2">Copied!</span>
+          <br>
+          <img id="qrImage" src="" alt="QR Code" class="img-fluid mt-3" style="max-width: 200px;"/>
+          <br>
+          <h5>Scan It</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

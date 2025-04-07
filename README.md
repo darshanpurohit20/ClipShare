@@ -29,7 +29,7 @@ cd clipshare
 
 ### 2.Set Up Python Environment
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate  #On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```

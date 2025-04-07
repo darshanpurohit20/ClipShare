@@ -35,7 +35,7 @@ pip install -r requirements.txt
 
 python app.py
 
-### Project Structure
+## 📁 Project Structure
 
 clipshare/
 ├── static/
@@ -50,7 +50,13 @@ clipshare/
 ├── app.py
 └── requirements.txt
 
-###📸 Screenshots
+## 📸 Screenshots
 
-###💡 Credits
-Created by ####Darshan Purohit
+
+## 💡 Credits
+
+Created by 💙 [**Darshan Purohit**](https://github.com/darshanpurohit07)
+
+[![GitHub - Darshan Purohit](https://img.shields.io/badge/GitHub-Darshan%20Purohit-blue?style=flat&logo=github)](https://github.com/darshanpurohit07)
+
+

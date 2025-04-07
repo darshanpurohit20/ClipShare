@@ -1,12 +1,9 @@
-
-from flask import Flask, request, redirect, url_for, send_from_directory, render_template, jsonify
+from flask import Flask, request, redirect, url_for, send_from_directory, render_template, jsonify, send_file
 import os
 import uuid
 import qrcode
 import io
-from flask import send_file 
 from werkzeug.utils import secure_filename
-from flask import send_file 
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
@@ -47,9 +44,6 @@ def get_data(code):
     elif data['type'] == 'file':
         return send_from_directory(directory='uploads', path=os.path.basename(data['content']), as_attachment=True, download_name=data['filename'])
 
-
-
-
 @app.route('/qr/<code>')
 def generate_qr(code):
     url = request.host_url + 'get/' + code
@@ -59,8 +53,7 @@ def generate_qr(code):
     img_io.seek(0)
     return send_file(img_io, mimetype='image/png')
 
-
-
 if __name__ == '__main__':
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)

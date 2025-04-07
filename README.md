@@ -38,7 +38,7 @@ pip install -r requirements.txt
 ```bash
 python app.py
 ```
-App will be running at: http://127.0.0.1:5000
+App will be running at: http://127.0.0.1:5001
 
 ## 📁 Project Structure
 
@@ -59,6 +59,18 @@ clipshare/
 ```
 
 ## 📸 Screenshots
+
+
+### 🔹 Upload Page - Share Link / QR
+![Upload Screenshot](readmeimg/IMG_1636.jpeg)
+
+### 🔹 Receive Page
+![QR Code Screenshot](readmeimg/IMG_1632.png)
+
+### 🔹 Received Text
+![Mobile Screenshot](readmeimg/IMG_1630.png)
+
+
 
 
 ## 💡 Credits

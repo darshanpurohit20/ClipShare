@@ -23,7 +23,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/darshanpurohit07/clipshare.git
+git clone https://github.com/darshanpurohit07/ClipShare.git
 cd clipshare
 ```
 

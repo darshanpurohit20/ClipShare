@@ -22,21 +22,27 @@
 
 ### 1. Clone the Repository
 
+```bash
 git clone https://github.com/darshanpurohit07/clipshare.git
 cd clipshare
+```
 
 ### 2.Set Up Python Environment
-
+```bash
 python -m venv venv
-source venv/bin/activate
+source venv/bin/activate  #On Windows: venv\Scripts\activate
 pip install -r requirements.txt
+```
 
 ### 3.Run The Flask App
-
+```bash
 python app.py
+```
+App will be running at: http://127.0.0.1:5000
 
 ## 📁 Project Structure
 
+```bash
 clipshare/
 ├── static/
 │   ├── css/
@@ -49,6 +55,8 @@ clipshare/
 │   └── shared_text.html
 ├── app.py
 └── requirements.txt
+
+```
 
 ## 📸 Screenshots
 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shared Text</title>
+</head>
+<body>
+    <h2>Received Text:</h2>
+    <textarea id="textContent" rows="10" cols="50" readonly>{{ text }}</textarea><br><br>
+    <button onclick="copyText()">📋 Copy to Clipboard</button>
+
+    <script>
+        function copyText() {
+            const textArea = document.getElementById("textContent");
+            textArea.select();
+            textArea.setSelectionRange(0, 99999); // for mobile
+            document.execCommand("copy");
+           
+        }
+    </script>
+</body>
+</html>

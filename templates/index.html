@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ClipShare</title>
+</head>
+<body>
+    <h2>Upload Text</h2>
+    <form id="textForm">
+        <textarea name="text" rows="5" cols="30"></textarea><br>
+        <button type="submit">Upload Text</button>
+    </form>
+
+    <h2>Upload File</h2>
+    <form id="fileForm" enctype="multipart/form-data">
+        <input type="file" name="file"><br>
+        <button type="submit">Upload File</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('textForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const res = await fetch('/upload_text', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            document.getElementById('result').innerHTML = 
+                'Code: ' + data.code + '<br>' +
+                '<img src="/qr/' + data.code + '" alt="QR Code">';
+        }
+
+        document.getElementById('fileForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const res = await fetch('/upload_file', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            document.getElementById('result').innerHTML = 
+                'Code: ' + data.code + '<br>' +
+                '<img src="/qr/' + data.code + '" alt="QR Code">';
+        }
+    </script>
+</body>
+</html>

@@ -34,7 +34,7 @@ def upload_file():
     if file:
         filename = secure_filename(file.filename)
         code = generate_code()
-        path = os.path.join(app.config['UPLOAD_FOLDER'], f"{code}_{filename}")
+        path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(path)
         data_store[code] = {'type': 'file', 'content': path, 'filename': filename}
         return jsonify({'code': code})

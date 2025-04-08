@@ -1,8 +1,8 @@
 # 📎 ClipShare
-
+![ClipShare Logo](static/images/logow.png)
 **ClipShare** is a minimal, anonymous file and text sharing web application. It generates a unique code and QR for each upload, enabling quick sharing via links or scanning.
 
-![ClipShare Logo](static/images/logow.png)
+
 
 ---
 

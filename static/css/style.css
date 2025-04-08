@@ -171,16 +171,14 @@
   }
   
   a.code-link, #codeDisplay {
-    color: rgb(15, 0, 223);
+    font-family: 'Segoe UI', sans-serif;;
     word-break: break-word;
-    font-weight: 300;
+    font-weight: 400;
   }
-  .btn-cpy{
-color: red;
-  }
+ 
 
   .home-btn {
-    position: fixed;
+    position: absolute;
     top: 20px;
     right: 20px;
     z-index: 1050;
@@ -188,6 +186,7 @@ color: red;
     color: #fff;
     border: none;
   }
+  
   
   .home-btn:hover {
     background-color: #444;
@@ -244,3 +243,66 @@ color: red;
     filter: invert(100%);
   }
   
+  .scann
+  {
+    font-family: 'Playfair Display', serif;
+  }
+
+#sharedText {
+  background-color: #f8f9fa;
+  color: #212529;   
+}
+
+body.dark-mode #sharedText {
+  background-color: #212529; 
+  color: #f8f9fa;
+  border: none;           
+}
+
+
+.card {
+  background-color: #ffffff;
+  color: #121212;
+  border: none;
+}
+
+
+body.dark-mode .card {
+  background-color: #121212;
+  color: #ffffff;
+  border: none;
+}
+.card {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+#copyTextBtn {
+  background-color: #212529; /* Bootstrap's dark */
+  color: #fff;
+  border: none;
+}
+
+
+body.dark-mode #copyTextBtn {
+  background-color: #f8f9fa; /* light background */
+  color: #000; /* dark text */
+}
+
+.code-input-wrapper {
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+.code-input {
+  width: 50px;
+  height: 60px;
+  font-size: 2rem;
+  border-radius: 12px;
+  background-color: #1f1f1f;
+  color: #fff;
+  border: 2px solid #444;
+  outline: none;
+}
+
+

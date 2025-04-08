@@ -1,15 +1,22 @@
 from flask import Flask, request, redirect, url_for, send_from_directory, render_template, jsonify, send_file
 import os
-import uuid
 import qrcode
 import io
+import random
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-data_store = {}  
+data_store = {}
+
+# Generate unique 4-digit numeric code
+def generate_code():
+    while True:
+        code = str(random.randint(1000, 9999))
+        if code not in data_store:
+            return code
 
 @app.route('/')
 def index():
@@ -18,7 +25,7 @@ def index():
 @app.route('/upload_text', methods=['POST'])
 def upload_text():
     text = request.form['text']
-    code = str(uuid.uuid4())[:8]
+    code = generate_code()
     data_store[code] = {'type': 'text', 'content': text}
     return jsonify({'code': code})
 
@@ -27,8 +34,8 @@ def upload_file():
     file = request.files['file']
     if file:
         filename = secure_filename(file.filename)
-        code = str(uuid.uuid4())[:8]
-        path = os.path.join(app.config['UPLOAD_FOLDER'], code + "_" + filename)
+        code = generate_code()
+        path = os.path.join(app.config['UPLOAD_FOLDER'], f"{code}_{filename}")
         file.save(path)
         data_store[code] = {'type': 'file', 'content': path, 'filename': filename}
         return jsonify({'code': code})
@@ -42,7 +49,10 @@ def get_data(code):
     if data['type'] == 'text':
         return render_template('display_text.html', text=data['content'])
     elif data['type'] == 'file':
-        return send_from_directory(directory='uploads', path=os.path.basename(data['content']), as_attachment=True, download_name=data['filename'])
+        return send_from_directory(directory='uploads',
+                                   path=os.path.basename(data['content']),
+                                   as_attachment=True,
+                                   download_name=data['filename'])
 
 @app.route('/qr/<code>')
 def generate_qr(code):

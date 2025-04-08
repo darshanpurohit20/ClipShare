@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <a href="/" class="btn home-btn">
+    <a href="/" class="btn home-btn  scann">
         <i class="fas fa-home me-1"></i> Home
       </a>
       
@@ -30,15 +30,16 @@
   <div class="container mt-4">
     <div class="card p-4 shadow-sm">
       <h4 class="brand-line"><u>Shared Text</u></h4>
-      <pre id="sharedText" class="bg-light p-3 rounded" style="white-space: pre-wrap;">{{ text }}</pre>
-      <div class="text-center mt-3">
-        <button id="copyTextBtn" class="btn btn-dark px-4">
+      <br>
+      <pre id="sharedText" class="p-3 rounded text-start" style="white-space: pre-wrap;">{{ text }}</pre>
+  <div class="text-center mt-3">
+        <button id="copyTextBtn" class="btn btn-dark px-4  scann">
           <i class="fas fa-copy me-2"></i> Copy Text
         </button>
       </div>
       
       
-      <span id="copyTextMsg" class="text-success ms-2 d-none">Copied!</span>
+      <span id="copyTextMsg" class="scann ms-2 d-none">Copied!</span>
     </div>
   </div>
 

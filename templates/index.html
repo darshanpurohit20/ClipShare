@@ -48,8 +48,8 @@
   <p class="brand-line">Anonymous file & text sharing via code or QR</p>
 
   <div class="toggle-btns">
-    <button class="btn btn-light" onclick="showSend()">Send</button>
-    <button class="btn btn-dark border border-light" onclick="showReceive()">Receive</button>
+    <button class="btn btn-light scann" onclick="showSend()">Send</button>
+    <button class="btn btn-dark border border-light scann" onclick="showReceive()">Receive</button>
   </div>
 
   <div class="container mt-5">
@@ -59,38 +59,51 @@
    
         <div class="upload-box" id="sendBox">
           <form id="fileForm">
-            <label for="file" class="form-label">Upload File</label>
+            <label for="file" class="form-label  scann">Upload File</label>
             <input type="file" id="file" name="file" class="form-control">
-            <button class="upload-btn" type="submit">Upload File</button>
+            <button class="upload-btn  scann" type="submit">Upload File</button>
           </form>
 
           <form id="textForm">
-            <label for="text" class="form-label mt-3">Paste Text</label>
+            <label for="text" class="form-label mt-3 scann">Paste Text</label>
             <textarea id="text" name="text" class="form-control" rows="4" placeholder="Paste your text here..."></textarea>
-            <button class="upload-btn" type="submit">Upload Text</button>
+            <button class="upload-btn  scann" type="submit">Upload Text</button>
           </form>
         </div>
 
    
         <div class="upload-box d-none" id="receiveBox">
-          <h5 class="text-center">Enter the Code</h5>
-          <input type="text" id="receiveCode" class="form-control my-3" placeholder="Enter code here...">
-          <button class="btn btn-dark border border-light w-100" onclick="receiveContent()">Receive</button>
-          <p id="receiveError" class="text-danger mt-2 d-none text-center">Invalid code or content not found.</p>
+          <h5 class="text-center scann">Receive Files</h5>
+          <p class="text-center scann">Enter your code in format 1234</p>
+          <div class="code-input-wrapper d-flex justify-content-center gap-2">
+            <input type="text" maxlength="1" class="code-input text-center scann" id="code1" />
+            <input type="text" maxlength="1" class="code-input text-center scann" id="code2" />
+            <input type="text" maxlength="1" class="code-input text-center scann" id="code3" />
+            <input type="text" maxlength="1" class="code-input text-center scann" id="code4" />
+          </div>
+          <button class="btn btn-dark border border-light w-100 mt-3 scann" onclick="receiveSplitCode()">Receive</button>
+          <p id="receiveError" class="text-danger mt-2 d-none text-center scann">Invalid code or content not found.</p>
         </div>
+        
+        
       </div>
 
     
       <div class="col-md-5 d-flex align-items-center justify-content-center">
         <div id="result" class="text-center d-none">
-          <h5>🔗 Share this Link:</h5>
-          <p id="codeDisplay" class="code-link"></p>
-          <button id="copyBtn" class="btn btn-dark border border-light">Copy Link</button>
-          <span id="copyMsg" class="text-success d-none ms-2">Copied!</span>
+          <div id="numericCode" class="mt-3">
+            <h5 class="scann">Your Code:</h5>
+            <p id="fourDigitCode" class="fw-bold fs-4 scann"></p>
+          </div>
+          
+          <h5 class="scann">🌐 Share this Link:</h5>
+          <p id="codeDisplay" class="scann"></p>
+          <button id="copyBtn" class="btn btn-dark border border-light scann">Copy Link</button>
+          <span id="copyMsg" class="scann d-none ms-2">Copied!</span>
           <br>
           <img id="qrImage" src="" alt="QR Code" class="img-fluid mt-3" style="max-width: 200px;"/>
           <br>
-          <h5>Scan It</h5>
+          <h5 class="scann">Scan It</h5>
         </div>
       </div>
     </div>

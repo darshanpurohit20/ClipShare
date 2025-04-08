@@ -63,13 +63,16 @@ clipshare/
 
 
 ### 🔹 Upload Page - Share Link / QR
-![Upload Screenshot](readmeimg/IMG_1636.jpeg)
+![Upload Screenshot](readmeimg/1.jpeg)
 
 ### 🔹 Receive Page
-![QR Code Screenshot](readmeimg/IMG_1632.png)
+![Receive Page Code Screenshot](readmeimg/2.png)
 
 ### 🔹 Received Text
-![Mobile Screenshot](readmeimg/IMG_1630.png)
+![Receive Text Screenshot](readmeimg/3.png)
+
+### 🔹 Received File
+![Receive File Screenshot](readmeimg/4.png)
 
 
 

@@ -7,11 +7,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleBtn = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
   const logo = document.getElementById('clipshare-logo');
-  const copyBtn = document.getElementById('copyBtn');
   const copyMsg = document.getElementById('copyMsg');
   const receiveBtn = document.querySelector('#receiveBox button');
+  const codeInputs = document.querySelectorAll('.code-input');
 
-  
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('error') === 'invalid') {
+    document.getElementById('receiveBox').classList.remove('d-none');
+    document.getElementById('sendBox').classList.add('d-none');
+    document.getElementById('receiveError').classList.remove('d-none');
+
+    codeInputs.forEach(input => input.value = '');
+
+    const code = params.get('code') || '';
+    for (let i = 0; i < code.length && i < codeInputs.length; i++) {
+      codeInputs[i].value = code[i];
+    }
+
+    codeInputs[0].focus();
+    document.getElementById('receiveBox').scrollIntoView({ behavior: 'smooth' });
+  }
+
   fileForm.onsubmit = async function (e) {
     e.preventDefault();
     const formData = new FormData(fileForm);
@@ -41,18 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (numericDiv) numericDiv.innerText = code;
   }
 
-
-  const codeInputs = document.querySelectorAll('.code-input');
-
   codeInputs.forEach((input, index) => {
-    input.addEventListener('input', (e) => {
-      const value = input.value;
-      if (value.length === 1) {
-        if (index < codeInputs.length - 1) {
-          codeInputs[index + 1].focus();
-        } else {
-          receiveBtn.focus(); // ✅ move focus to Receive button
-        }
+    input.addEventListener('input', () => {
+      if (input.value.length === 1 && index < codeInputs.length - 1) {
+        codeInputs[index + 1].focus();
+      } else if (index === codeInputs.length - 1) {
+        receiveBtn.focus();
       }
     });
 
@@ -65,28 +75,23 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('paste', (e) => {
       const paste = e.clipboardData.getData('text').slice(0, 4);
       e.preventDefault();
-      for (let i = 0; i < paste.length && i < codeInputs.length; i++) {
-        codeInputs[i].value = paste[i];
-      }
-      if (paste.length === 4) {
-        receiveBtn.focus(); // ✅ focus button after paste
-      } else {
-        codeInputs[Math.min(paste.length, codeInputs.length - 1)].focus();
-      }
+      codeInputs.forEach((input, i) => {
+        input.value = paste[i] || '';
+      });
+      (codeInputs[Math.min(paste.length, codeInputs.length - 1)] || codeInputs[0]).focus();
     });
   });
 
   window.receiveSplitCode = function () {
     const code = [...codeInputs].map(input => input.value.trim()).join('');
-    if (code.length === 4) 
-      {
-      codeInputs.forEach(input => input.value = '');
+    if (code.length === 4) {
       window.location.href = `/get/${code}`;
     } else {
       document.getElementById('receiveError').classList.remove('d-none');
     }
-  };
 
+    codeInputs.forEach(input => input.value = '');
+  };
 
   window.showSend = function () {
     document.getElementById('sendBox').classList.remove('d-none');
@@ -99,20 +104,44 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('receiveBox').classList.remove('d-none');
     document.getElementById('sendBox').classList.add('d-none');
     result.classList.add('d-none');
+    codeInputs.forEach(input => input.value = '');
     document.getElementById('receiveBox').scrollIntoView({ behavior: 'smooth' });
   };
 
-  if (copyBtn) {
-    copyBtn.addEventListener('click', () => {
-      const link = codeDisplay.innerText;
-      navigator.clipboard.writeText(link).then(() => {
+  window.copyLinkText = function () {
+    const linkText = document.getElementById('codeDisplay')?.innerText?.trim();
+    const copyMsg = document.getElementById('copyMsg');
+  
+    if (!linkText) return alert('No link to copy!');
+  
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(linkText).then(() => {
         copyMsg.classList.remove('d-none');
-        setTimeout(() => {
-          copyMsg.classList.add('d-none');
-        }, 2000);
+        setTimeout(() => copyMsg.classList.add('d-none'), 2000);
+      }).catch(err => {
+        fallbackCopy(linkText);
       });
-    });
-  }
+    } else {
+      fallbackCopy(linkText);
+    }
+  
+    function fallbackCopy(text) {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        copyMsg.classList.remove('d-none');
+        setTimeout(() => copyMsg.classList.add('d-none'), 2000);
+      } catch (err) {
+        alert('Copy failed. Please copy manually.');
+      }
+      document.body.removeChild(tempInput);
+    }
+  };
+  
 
   toggleBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
@@ -134,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
       logo.src = '/static/images/logob.png';
     }
   };
-
 
   window.receiveContent = function () {
     const code = document.getElementById('receiveCode')?.value.trim();

@@ -278,15 +278,15 @@ body.dark-mode .card {
 
 
 #copyTextBtn {
-  background-color: #212529; /* Bootstrap's dark */
+  background-color: #212529; 
   color: #fff;
   border: none;
 }
 
 
 body.dark-mode #copyTextBtn {
-  background-color: #f8f9fa; /* light background */
-  color: #000; /* dark text */
+  background-color: #f8f9fa; 
+  color: #000; 
 }
 
 .code-input-wrapper {
@@ -305,4 +305,37 @@ body.dark-mode #copyTextBtn {
   outline: none;
 }
 
+.download-btn {
+  font-family: 'Playfair Display', serif;
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+body:not(.dark-mode) .download-btn {
+  background-color:#111; 
+  color: #f0f0f0;
+}
+
+body:not(.dark-mode) .download-btn:hover {
+  background-color: #343232;
+  color: #e0e0e0;
+}
+
+
+body.dark-mode .download-btn {
+  background-color:#f0f0f0;
+  color:  #222;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .download-btn:hover {
+  background-color: rgb(218, 212, 212);
+  color: #333;
+}
 

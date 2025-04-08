@@ -11,7 +11,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 data_store = {}
 
-# Generate unique 4-digit numeric code
 def generate_code():
     while True:
         code = str(random.randint(1000, 9999))
@@ -45,14 +44,20 @@ def upload_file():
 def get_data(code):
     data = data_store.get(code)
     if not data:
-        return "Invalid code", 404
+        return redirect(url_for('index', error='invalid', code=code))
+
     if data['type'] == 'text':
         return render_template('display_text.html', text=data['content'])
     elif data['type'] == 'file':
-        return send_from_directory(directory='uploads',
-                                   path=os.path.basename(data['content']),
-                                   as_attachment=True,
-                                   download_name=data['filename'])
+        full_path = data['content']
+        filepath = os.path.basename(full_path)
+        filename = data['filename']
+        return render_template('display_file.html', filename=filename, filepath=filepath)
+
+@app.route('/download/<filename>')
+def download_file(filename):
+    return send_from_directory(directory='uploads', path=filename, as_attachment=True)
+
 
 @app.route('/qr/<code>')
 def generate_qr(code):

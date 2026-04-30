@@ -186,10 +186,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.receiveContent = function () {
-    const code = document.getElementById('receiveCode')?.value.trim();
-    if (code) {
-      window.location.href = `/get/${code}`;
-    }
-  };
 });

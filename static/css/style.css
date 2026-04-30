@@ -299,10 +299,16 @@ body.dark-mode #copyTextBtn {
   height: 60px;
   font-size: 2rem;
   border-radius: 12px;
+  background-color: #f0f0f0;
+  color: #000;
+  border: 2px solid #ccc;
+  outline: none;
+}
+
+body.dark-mode .code-input {
   background-color: #1f1f1f;
   color: #fff;
   border: 2px solid #444;
-  outline: none;
 }
 
 .download-btn {

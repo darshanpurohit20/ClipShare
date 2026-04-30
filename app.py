@@ -3,7 +3,7 @@ import zipfile
 import os
 import qrcode
 import io
-import random
+import secrets
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -19,10 +19,13 @@ def allowed_file(filename):
 data_store = {}
 
 def generate_code():
-    while True:
-        code = str(random.randint(1000, 9999))
+    attempts = 0
+    while attempts < 100:
+        code = ''.join(secrets.choice('0123456789') for _ in range(4))
         if code not in data_store:
             return code
+        attempts += 1
+    return None
 
 @app.route('/')
 def index():
@@ -136,4 +139,5 @@ def generate_qr(code):
 if __name__ == '__main__':
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     port = int(os.environ.get('PORT', 5001))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    debug_mode = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)

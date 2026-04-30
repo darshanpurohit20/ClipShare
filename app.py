@@ -9,6 +9,12 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
+
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'docx', 'doc', 'xlsx', 'xls', 'csv', 'zip', 'rar', 'mp4', 'mp3'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 data_store = {}
 
@@ -33,15 +39,19 @@ def upload_text():
 
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
+    if 'file' not in request.files:
+        return "No file uploaded", 400
     file = request.files['file']
-    if file:
+    if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         code = generate_code()
+        if not code:
+            return jsonify({'error': 'Server full'}), 503
         path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(path)
         data_store[code] = {'type': 'file', 'content': path, 'filename': filename}
         return jsonify({'code': code})
-    return "No file uploaded", 400
+    return "Invalid file type or no file uploaded", 400
 
 @app.route('/upload_files', methods=['POST'])
 def upload_files():
@@ -50,9 +60,12 @@ def upload_files():
         return jsonify({'error': 'No files uploaded'}), 400
 
     code = generate_code()
+    if not code:
+        return jsonify({'error': 'Server full'}), 503
+    
     saved = []
     for file in files:
-        if file and file.filename:
+        if file and file.filename and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             folder = os.path.join(app.config['UPLOAD_FOLDER'], code)
             os.makedirs(folder, exist_ok=True)

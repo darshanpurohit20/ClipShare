@@ -7,6 +7,11 @@ import secrets
 import time
 import threading
 import shutil
+import requests
+from PIL import Image
+from qrcode.image.styledpil import StyledPilImage
+from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
+from qrcode.image.styles.colormasks import SolidFillColorMask
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -161,7 +166,39 @@ def download_zip(code):
 @app.route('/qr/<code>')
 def generate_qr(code):
     url = request.host_url + 'get/' + code
-    img = qrcode.make(url)
+    
+    qr = qrcode.QRCode(
+        version=4,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=10,
+        border=2,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    try:
+        # Fetch the monster avatar
+        avatar_url = f"https://robohash.org/{code}.png?set=set2&size=100x100"
+        response = requests.get(avatar_url, timeout=2.0)
+        response.raise_for_status()
+        
+        logo = Image.open(io.BytesIO(response.content)).convert("RGBA")
+        
+        # Make stylish QR with logo
+        img = qr.make_image(
+            image_factory=StyledPilImage,
+            module_drawer=RoundedModuleDrawer(),
+            color_mask=SolidFillColorMask(front_color=(40, 30, 60), back_color=(255, 255, 255)),
+            embeded_image_path=io.BytesIO(response.content)
+        )
+    except Exception as e:
+        # Fallback to basic stylish QR without logo
+        img = qr.make_image(
+            image_factory=StyledPilImage,
+            module_drawer=RoundedModuleDrawer(),
+            color_mask=SolidFillColorMask(front_color=(40, 30, 60), back_color=(255, 255, 255))
+        )
+
     img_io = io.BytesIO()
     img.save(img_io, 'PNG')
     img_io.seek(0)

@@ -156,28 +156,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── TTL Custom Input Logic ──
-  document.querySelectorAll('input[name="fileTtl"]').forEach(rb => {
-    rb.addEventListener('change', () => {
-      const fTtlCustom = document.getElementById('fTtlCustom');
-      const fCustomContainer = document.getElementById('fileCustomTtlContainer');
-      if (fTtlCustom && fCustomContainer) {
-        if (fTtlCustom.checked) fCustomContainer.classList.remove('d-none');
-        else fCustomContainer.classList.add('d-none');
-      }
+  // ── TTL Custom toggle ──
+  function bindTtlCustom(groupName, wrapId, inputId) {
+    document.querySelectorAll(`input[name="${groupName}"]`).forEach(rb => {
+      rb.addEventListener('change', () => {
+        const wrap = document.getElementById(wrapId);
+        const isCustom = rb.value === 'custom' && rb.checked;
+        if (wrap) {
+          wrap.style.display = isCustom ? 'block' : 'none';
+          if (isCustom) {
+            wrap.style.animation = 'none';
+            void wrap.offsetWidth;
+            wrap.style.animation = '';
+            document.getElementById(inputId)?.focus();
+          }
+        }
+      });
     });
-  });
 
-  document.querySelectorAll('input[name="textTtl"]').forEach(rb => {
-    rb.addEventListener('change', () => {
-      const tTtlCustom = document.getElementById('tTtlCustom');
-      const tCustomContainer = document.getElementById('textCustomTtlContainer');
-      if (tTtlCustom && tCustomContainer) {
-        if (tTtlCustom.checked) tCustomContainer.classList.remove('d-none');
-        else tCustomContainer.classList.add('d-none');
-      }
-    });
-  });
+    // Also handle label click directly for + pill
+    const customRb = document.querySelector(`input[name="${groupName}"][value="custom"]`);
+    const customLabel = customRb ? document.querySelector(`label[for="${customRb.id}"]`) : null;
+    if (customLabel && customRb) {
+      customLabel.addEventListener('click', e => {
+        e.preventDefault();
+        customRb.checked = true;
+        customRb.dispatchEvent(new Event('change'));
+        // update pill active states
+        document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => {
+          const lbl = document.querySelector(`label[for="${r.id}"]`);
+          if (lbl) lbl.classList.toggle('active-pill', r.checked);
+        });
+      });
+    }
+  }
+
+  bindTtlCustom('fileTtl', 'fileCustomTtlWrap', 'fileCustomTtl');
+  bindTtlCustom('textTtl', 'textCustomTtlWrap', 'textCustomTtl');
 
   // ── File upload ──
   if (fileForm) {

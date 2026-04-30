@@ -56,7 +56,7 @@
     <!-- Brand -->
     <div class="min-brand fade-in">
       <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare" class="min-logo">
-      <h1 class="min-title">Clip<span>Share</span></h1>
+      <h1 class="min-title"><span class="title-clip">Clip</span><span class="title-share">Share</span></h1>
     </div>
     <p class="min-sub fade-in fade-in-delay-1">
       Anonymous &amp; End-to-End instant file sharing.<br>
@@ -117,12 +117,15 @@
           <div class="min-ttl-pills">
             <input type="radio" class="btn-check" name="fileTtl" id="fTtl5" value="5">
             <label class="min-ttl-pill" for="fTtl5">5m</label>
-            <input type="radio" class="btn-check" name="fileTtl" id="fTtl10" value="10">
-            <label class="min-ttl-pill" for="fTtl10">10m</label>
             <input type="radio" class="btn-check" name="fileTtl" id="fTtl60" value="60">
             <label class="min-ttl-pill" for="fTtl60">1h</label>
             <input type="radio" class="btn-check" name="fileTtl" id="fTtl1440" value="1440" checked>
             <label class="min-ttl-pill" for="fTtl1440">1d</label>
+            <input type="radio" class="btn-check" name="fileTtl" id="fTtlCustom" value="custom">
+            <label class="min-ttl-pill min-ttl-custom" for="fTtlCustom" title="Custom time"><i class="fas fa-plus"></i></label>
+          </div>
+          <div id="fileCustomTtlWrap" class="min-ttl-custom-wrap" style="display:none;">
+            <input type="number" id="fileCustomTtl" class="min-ttl-input" placeholder="Minutes, e.g. 120" min="1" max="43200">
           </div>
         </div>
 
@@ -154,12 +157,15 @@
             <div class="min-ttl-pills">
               <input type="radio" class="btn-check" name="textTtl" id="tTtl5" value="5">
               <label class="min-ttl-pill" for="tTtl5">5m</label>
-              <input type="radio" class="btn-check" name="textTtl" id="tTtl10" value="10">
-              <label class="min-ttl-pill" for="tTtl10">10m</label>
               <input type="radio" class="btn-check" name="textTtl" id="tTtl60" value="60">
               <label class="min-ttl-pill" for="tTtl60">1h</label>
               <input type="radio" class="btn-check" name="textTtl" id="tTtl1440" value="1440" checked>
               <label class="min-ttl-pill" for="tTtl1440">1d</label>
+              <input type="radio" class="btn-check" name="textTtl" id="tTtlCustom" value="custom">
+              <label class="min-ttl-pill min-ttl-custom" for="tTtlCustom" title="Custom time"><i class="fas fa-plus"></i></label>
+            </div>
+            <div id="textCustomTtlWrap" class="min-ttl-custom-wrap" style="display:none;">
+              <input type="number" id="textCustomTtl" class="min-ttl-input" placeholder="Minutes, e.g. 120" min="1" max="43200">
             </div>
           </div>
           <div class="action-bar" style="margin-top:12px;">

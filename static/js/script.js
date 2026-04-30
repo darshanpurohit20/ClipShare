@@ -28,12 +28,34 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('receiveBox').scrollIntoView({ behavior: 'smooth' });
   }
 
+  // Live file preview
+  document.getElementById('file').addEventListener('change', function () {
+    const list = document.getElementById('filePreviewList');
+    list.innerHTML = '';
+    [...this.files].forEach(f => {
+      const li = document.createElement('li');
+      li.textContent = '📄 ' + f.name;
+      li.style.marginBottom = '2px';
+      list.appendChild(li);
+    });
+  });
+
   fileForm.onsubmit = async function (e) {
     e.preventDefault();
-    const formData = new FormData(fileForm);
-    const res = await fetch('/upload_file', { method: 'POST', body: formData });
+    const fileInput = document.getElementById('file');
+    if (!fileInput.files.length) {
+      alert('Please select at least one file.');
+      return;
+    }
+    const formData = new FormData();
+    [...fileInput.files].forEach(f => formData.append('files', f));
+    const res = await fetch('/upload_files', { method: 'POST', body: formData });
     const data = await res.json();
-    showResult(data.code);
+    if (data.code) {
+      showResult(data.code);
+    } else {
+      alert(data.error || 'Upload failed. Please try again.');
+    }
   };
 
   textForm.onsubmit = async function (e) {

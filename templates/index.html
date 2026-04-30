@@ -59,9 +59,10 @@
    
         <div class="upload-box" id="sendBox">
           <form id="fileForm">
-            <label for="file" class="form-label  scann">Upload File</label>
-            <input type="file" id="file" name="file" class="form-control">
-            <button class="upload-btn  scann" type="submit">Upload File</button>
+            <label for="file" class="form-label scann">Upload Files <span style="font-size:0.8em; opacity:0.6;">(select one or more)</span></label>
+            <input type="file" id="file" name="files" class="form-control" multiple>
+            <ul id="filePreviewList" class="mt-2 mb-1 list-unstyled small scann" style="padding-left: 4px;"></ul>
+            <button class="upload-btn scann" type="submit">Upload File(s)</button>
           </form>
 
           <form id="textForm">

@@ -11,27 +11,23 @@
 </head>
 <body class="dark-mode">
 
-  <!-- ── Topbar ── -->
-  <nav class="cs-topbar">
-    <a class="cs-topbar-brand" href="/">
-      <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare">
-      <span>ClipShare</span>
-    </a>
-    <div class="cs-topbar-actions">
-      <a href="/" class="cs-icon-btn" title="Home" style="text-decoration:none;">
-        <i class="fas fa-house"></i>
-      </a>
-      <button class="cs-icon-btn" id="theme-toggle" title="Toggle theme">
-        <i id="theme-icon" class="fas fa-moon"></i>
-      </button>
-    </div>
-  </nav>
+  <a href="/" class="corner-btn corner-info" title="Home" style="text-decoration:none;">
+    <i class="fas fa-house"></i>
+  </a>
+  <button class="corner-btn corner-theme" id="theme-toggle" title="Toggle theme">
+    <i id="theme-icon" class="fas fa-moon"></i>
+  </button>
 
   <!-- ── Content ── -->
-  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 16px 60px;position:relative;z-index:1;">
-    <div style="width:100%;max-width:500px;">
+  <div class="min-page" style="justify-content:center;">
 
-      <div class="panel-card fade-in" style="text-align:center;padding:40px 32px;">
+    <div class="min-brand fade-in" style="margin-bottom:24px;">
+      <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare" class="min-logo">
+      <h1 class="min-title"><span class="title-clip">Clip</span><span class="title-share">Share</span></h1>
+    </div>
+
+    <div class="min-panel fade-in fade-in-delay-1" style="text-align:center;">
+
         <!-- Accent line is added via ::before in CSS -->
 
         <div class="success-badge" style="margin-bottom:20px;">
@@ -57,11 +53,10 @@
         </a>
 
         <div style="margin-top:24px;">
-          <a href="/" class="btn-action-outline" style="text-decoration:none;">
+          <a href="/" class="action-bar-ghost" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;">
             <i class="fas fa-plus"></i> New Transfer
           </a>
         </div>
-      </div>
 
     </div>
   </div>

@@ -11,25 +11,22 @@
 </head>
 <body class="dark-mode">
 
-  <!-- ── Topbar ── -->
-  <nav class="cs-topbar">
-    <a class="cs-topbar-brand" href="/">
-      <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare">
-      <span>ClipShare</span>
-    </a>
-    <div class="cs-topbar-actions">
-      <a href="/" class="cs-icon-btn" title="Home" style="text-decoration:none;">
-        <i class="fas fa-house"></i>
-      </a>
-      <button class="cs-icon-btn" id="theme-toggle" title="Toggle theme">
-        <i id="theme-icon" class="fas fa-moon"></i>
-      </button>
-    </div>
-  </nav>
+  <a href="/" class="corner-btn corner-info" title="Home" style="text-decoration:none;">
+    <i class="fas fa-house"></i>
+  </a>
+  <button class="corner-btn corner-theme" id="theme-toggle" title="Toggle theme">
+    <i id="theme-icon" class="fas fa-moon"></i>
+  </button>
 
   <!-- ── Content ── -->
-  <div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:90px 16px 60px;position:relative;z-index:1;">
-    <div style="width:100%;max-width:720px;">
+  <div class="min-page" style="padding-top:48px;padding-bottom:48px;align-items:center;">
+
+    <div class="min-brand fade-in" style="margin-bottom:24px;">
+      <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare" class="min-logo">
+      <h1 class="min-title"><span class="title-clip">Clip</span><span class="title-share">Share</span></h1>
+    </div>
+
+    <div style="width:100%;max-width:640px;">
 
       <!-- Header row -->
       <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
@@ -64,7 +61,7 @@
 
       <!-- Back link -->
       <div class="fade-in fade-in-delay-2" style="text-align:center;margin-top:28px;">
-        <a href="/" class="btn-action-outline" style="text-decoration:none;">
+        <a href="/" class="action-bar-ghost" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;">
           <i class="fas fa-plus"></i> New Transfer
         </a>
       </div>

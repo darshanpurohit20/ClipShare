@@ -2,7 +2,7 @@
    CLIPSHARE — MODERN DARK UI
    ═══════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700;900&family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 /* ── CSS Variables ── */
 :root {
@@ -1027,23 +1027,24 @@ body.dark-mode .btn-close {
 }
 
 .min-title {
-  font-family: 'Bebas Neue', 'Syne', sans-serif;
-  font-size: 3.8rem;
-  font-weight: 400;
+  font-family: 'Outfit', 'Syne', sans-serif;
+  font-size: 3.4rem;
+  font-weight: 900;
   margin: 0;
-  letter-spacing: 0.06em;
+  letter-spacing: -0.04em;
   color: var(--text);
   line-height: 1;
-  text-transform: uppercase;
 }
 
 .min-title .title-clip {
-  opacity: 0.55;
-  letter-spacing: 0.08em;
+  font-weight: 200;
+  opacity: 0.6;
+  letter-spacing: -0.02em;
 }
 
 .min-title .title-share {
-  letter-spacing: 0.04em;
+  font-weight: 900;
+  letter-spacing: -0.05em;
 }
 
 /* Subtitle */
@@ -1219,6 +1220,28 @@ body.dark-mode .btn-close {
 .min-file-list {
   margin: 10px 0 0;
   padding: 0;
+  max-height: 168px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
+}
+
+.min-file-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.min-file-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.min-file-list::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 4px;
+}
+
+.min-file-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 .min-file-list li {
@@ -1308,7 +1331,7 @@ body.dark-mode .btn-close {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   padding: 10px 0 0;
   border-top: 1px solid var(--border);
   margin-top: 12px;
@@ -1361,8 +1384,9 @@ body.dark-mode .btn-close {
 
 .min-ttl-custom-wrap {
   width: 100%;
-  margin-top: 8px;
-  animation: fadeSlideUp 0.2s ease both;
+  flex-basis: 100%;
+  margin-top: 6px;
+  animation: fadeSlideUp 0.2s cubic-bezier(0.16,1,0.3,1) both;
 }
 
 .min-ttl-input {
@@ -1706,6 +1730,53 @@ body.dark-mode .btn-close {
 .corner-theme {
   bottom: 16px;
   right: 16px;
+}
+
+/* ── Error Toast ── */
+.error-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-80px);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1a0f0f;
+  border: 1px solid rgba(248,113,113,0.35);
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #f87171;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  white-space: nowrap;
+  animation: toastIn 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+  max-width: 90vw;
+  white-space: normal;
+}
+
+.error-toast-close {
+  background: none;
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+  padding: 0 0 0 6px;
+  font-size: 13px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.error-toast-close:hover { opacity: 1; }
+
+@keyframes toastIn {
+  from { transform: translateX(-50%) translateY(-80px); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0);     opacity: 1; }
+}
+
+@keyframes toastOut {
+  from { transform: translateX(-50%) translateY(0);     opacity: 1; }
+  to   { transform: translateX(-50%) translateY(-80px); opacity: 0; }
 }
 
 /* ── Cursor spotlight ── */

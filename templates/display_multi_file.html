@@ -80,28 +80,30 @@
     .payload-count {
       font-size:0.82rem; font-weight:600; color:var(--accent-2);
     }
+    .file-scroll::-webkit-scrollbar { width: 4px; }
+    .file-scroll::-webkit-scrollbar-track { background: transparent; }
+    .file-scroll::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
+    .file-scroll::-webkit-scrollbar-thumb:hover { background: var(--accent); }
   </style>
 </head>
 <body class="dark-mode">
 
-  <!-- ── Topbar ── -->
-  <nav class="cs-topbar">
-    <a class="cs-topbar-brand" href="/">
-      <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare">
-      <span>ClipShare</span>
-    </a>
-    <div class="cs-topbar-actions">
-      <a href="/" class="cs-icon-btn" title="Home" style="text-decoration:none;">
-        <i class="fas fa-house"></i>
-      </a>
-      <button class="cs-icon-btn" id="theme-toggle" title="Toggle theme">
-        <i id="theme-icon" class="fas fa-moon"></i>
-      </button>
-    </div>
-  </nav>
+  <a href="/" class="corner-btn corner-info" title="Home" style="text-decoration:none;">
+    <i class="fas fa-house"></i>
+  </a>
+  <button class="corner-btn corner-theme" id="theme-toggle" title="Toggle theme">
+    <i id="theme-icon" class="fas fa-moon"></i>
+  </button>
+
   <!-- ── Content ── -->
-  <div style="min-height:100vh;padding:90px 16px 40px;position:relative;z-index:1;">
-    <div style="max-width:640px;margin:0 auto;">
+  <div class="min-page" style="padding-top:48px;padding-bottom:48px;align-items:center;">
+
+    <div class="min-brand fade-in" style="margin-bottom:24px;">
+      <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare" class="min-logo">
+      <h1 class="min-title"><span class="title-clip">Clip</span><span class="title-share">Share</span></h1>
+    </div>
+
+    <div style="width:100%;max-width:580px;">
 
       <!-- Page header -->
       <div class="fade-in" style="text-align:center;margin-bottom:24px;">
@@ -118,13 +120,13 @@
       </div>
 
       <!-- Payload panel -->
-      <div class="panel-card fade-in fade-in-delay-1" style="padding:0;overflow:hidden;">
+      <div class="panel-card fade-in fade-in-delay-1" style="padding:0;overflow:visible;">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface-2);">
           <span class="payload-label"><i class="fas fa-layer-group me-1"></i> Payload Summary</span>
           <span class="payload-count">{{ files|length }} file{{ 's' if files|length != 1 }}</span>
         </div>
 
-        <div style="padding:12px 14px;">
+        <div class="file-scroll" style="padding:12px 14px;max-height:360px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--surface-3) transparent;">
           {% for file in files %}
             {% if '.' in file.filename %}
               {% set ext = file.filename.rsplit('.', 1)[1] | lower %}
@@ -171,7 +173,7 @@
 
       <!-- Back link -->
       <div class="fade-in fade-in-delay-2" style="text-align:center;margin-top:24px;">
-        <a href="/" class="btn-action-outline" style="text-decoration:none;">
+        <a href="/" class="action-bar-ghost" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;">
           <i class="fas fa-plus"></i> New Transfer
         </a>
       </div>

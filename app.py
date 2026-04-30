@@ -21,6 +21,8 @@ def generate_code():
 def index():
     return render_template('index.html')
 
+
+
 @app.route('/upload_text', methods=['POST'])
 def upload_text():
     text = request.form['text']

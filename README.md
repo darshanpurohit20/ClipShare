@@ -79,8 +79,8 @@ clipshare/
 
 ## 💡 Credits
 
-Created by 💙 [**Darshan Purohit**](https://github.com/darshanpurohit07)
+Created by 💙 [**Darshan Purohit**](https://github.com/darshanpurohit20)
 
-[![GitHub - Darshan Purohit](https://img.shields.io/badge/GitHub-Darshan%20Purohit-blue?style=flat&logo=github)](https://github.com/darshanpurohit07)
+[![GitHub - Darshan Purohit](https://img.shields.io/badge/GitHub-Darshan%20Purohit-blue?style=flat&logo=github)](https://github.com/darshanpurohit20)
 
 

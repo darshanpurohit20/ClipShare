@@ -27,21 +27,15 @@
   <p class="brand-line">Anonymous file & text sharing via code or QR</p>
   <h2 class="scann">📎 File Ready to Download</h2>
   <p class="scann"><strong>Filename:</strong> {{ filename }}</p>
-  <a href="{{ url_for('download_file', filename=filepath) }}" class="download-btn" download>
+  <a href="{{ url_for('download_bundle_file', code=code, filename=filename) }}" class="download-btn" download>
     <i class="fas fa-download me-2 "></i> Download File
   </a>
   
-  
-  
-      
-      
-    
     </div>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-     
       const toggleBtn = document.getElementById('theme-toggle');
       const themeIcon = document.getElementById('theme-icon');
       const logo = document.getElementById('clipshare-logo');
@@ -63,30 +57,6 @@
         themeIcon.className = 'fas fa-moon';
         logo.src = '/static/images/logob.png';
       }
-
-   
-      const copyBtn = document.getElementById("copyTextBtn");
-      const copyMsg = document.getElementById("copyTextMsg");
-      const sharedText = document.getElementById("sharedText");
-
-      copyBtn.addEventListener("click", () => {
-        const range = document.createRange();
-        range.selectNode(sharedText);
-        window.getSelection().removeAllRanges();
-        window.getSelection().addRange(range);
-
-        try {
-          document.execCommand("copy");
-          copyMsg.classList.remove("d-none");
-          setTimeout(() => {
-            copyMsg.classList.add("d-none");
-          }, 2000);
-        } catch (err) {
-          alert("Failed to copy text");
-        }
-
-        window.getSelection().removeAllRanges();
-      });
     });
   </script>
 </body>

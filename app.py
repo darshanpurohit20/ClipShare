@@ -50,7 +50,9 @@ def upload_file():
         code = generate_code()
         if not code:
             return jsonify({'error': 'Server full'}), 503
-        path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        folder = os.path.join(app.config['UPLOAD_FOLDER'], code)
+        os.makedirs(folder, exist_ok=True)
+        path = os.path.join(folder, filename)
         file.save(path)
         data_store[code] = {'type': 'file', 'content': path, 'filename': filename}
         return jsonify({'code': code})
@@ -91,16 +93,10 @@ def get_data(code):
     if data['type'] == 'text':
         return render_template('display_text.html', text=data['content'])
     elif data['type'] == 'file':
-        full_path = data['content']
-        filepath = os.path.basename(full_path)
         filename = data['filename']
-        return render_template('display_file.html', filename=filename, filepath=filepath)
+        return render_template('display_file.html', filename=filename, code=code)
     elif data['type'] == 'multi_file':
         return render_template('display_multi_file.html', files=data['files'], code=code)
-
-@app.route('/download/<filename>')
-def download_file(filename):
-    return send_from_directory(directory='uploads', path=filename, as_attachment=True)
 
 @app.route('/download/<code>/<filename>')
 def download_bundle_file(code, filename):

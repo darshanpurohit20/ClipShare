@@ -46,6 +46,36 @@ document.addEventListener('DOMContentLoaded', () => {
     if (codeInputs[0]) codeInputs[0].focus();
   }
 
+  // ── Add Text / Back to Files ──
+  const addTextBtn    = document.getElementById('addTextBtn');
+  const backToFileBtn = document.getElementById('backToFileBtn');
+  const selectFilesBtn = document.getElementById('selectFilesBtn');
+  const filePanel     = document.getElementById('filePanel');
+  const textPanel     = document.getElementById('textPanel');
+
+  if (addTextBtn) {
+    addTextBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (filePanel) filePanel.style.display = 'none';
+      if (textPanel) { textPanel.style.display = 'block'; document.getElementById('text')?.focus(); }
+    });
+  }
+
+  if (backToFileBtn) {
+    backToFileBtn.addEventListener('click', () => {
+      if (textPanel) textPanel.style.display = 'none';
+      if (filePanel) filePanel.style.display = 'block';
+    });
+  }
+
+  // Select Files button clicks the hidden input directly
+  if (selectFilesBtn) {
+    selectFilesBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('file')?.click();
+    });
+  }
+
   // ── Drag & Drop ──
   const dropZone = document.getElementById('dropZone');
   if (dropZone) {
@@ -67,18 +97,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ── File list state ──
+  let selectedFiles = [];
+
+  function formatBytes(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+    return (b / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  function renderFileList() {
+    const list     = document.getElementById('filePreviewList');
+    const dropZoneEl = document.getElementById('dropZone');
+    if (!list) return;
+    list.innerHTML = '';
+
+    if (selectedFiles.length === 0) {
+      if (dropZoneEl) dropZoneEl.style.display = '';
+      return;
+    }
+    if (dropZoneEl) dropZoneEl.style.display = 'none';
+
+    selectedFiles.forEach((f, i) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <i class="fas fa-file" style="color:var(--text-muted);font-size:0.8rem;flex-shrink:0;"></i>
+        <span class="file-row-name">${f.name}</span>
+        <span class="file-row-size">${formatBytes(f.size)}</span>
+        <button class="file-row-remove" data-idx="${i}" type="button" title="Remove">
+          <i class="fas fa-xmark"></i>
+        </button>`;
+      list.appendChild(li);
+    });
+
+    list.querySelectorAll('.file-row-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectedFiles.splice(parseInt(btn.dataset.idx), 1);
+        renderFileList();
+      });
+    });
+  }
+
   // ── Live file preview ──
   const fileInputEl = document.getElementById('file');
   if (fileInputEl) {
     fileInputEl.addEventListener('change', function () {
-      const list = document.getElementById('filePreviewList');
-      if (!list) return;
-      list.innerHTML = '';
-      [...this.files].forEach(f => {
-        const li = document.createElement('li');
-        li.innerHTML = `<i class="fas fa-file" style="color:var(--accent);font-size:0.75rem;"></i> ${f.name}`;
-        list.appendChild(li);
-      });
+      [...this.files].forEach(f => selectedFiles.push(f));
+      renderFileList();
+    });
+  }
+
+  // Add More Files button (reuses same hidden input)
+  const fileMoreEl = document.getElementById('fileMore');
+  if (fileMoreEl) {
+    fileMoreEl.addEventListener('change', function () {
+      [...this.files].forEach(f => selectedFiles.push(f));
+      renderFileList();
     });
   }
 
@@ -109,8 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (fileForm) {
     fileForm.onsubmit = async function (e) {
       e.preventDefault();
-      const fileInput = document.getElementById('file');
-      if (!fileInput.files.length) {
+      if (!selectedFiles.length) {
         alert('Please select at least one file.');
         return;
       }
@@ -120,8 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled = true;
       try {
         const formData = new FormData();
-        [...fileInput.files].forEach(f => formData.append('files', f));
-        
+        selectedFiles.forEach(f => formData.append('files', f));
         let ttl = document.querySelector('input[name="fileTtl"]:checked')?.value || '1440';
         if (ttl === 'custom') {
           ttl = document.getElementById('fileCustomTtl')?.value || '1440';
@@ -172,20 +244,50 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // ── Show result panel ──
+  // ── Show result ──
   function showResult(code) {
-    if (result) {
-      result.classList.remove('d-none');
-      result.style.animation = 'none';
-      void result.offsetWidth;
-      result.style.animation = '';
+    const url = `${window.location.origin}/get/${code}`;
+
+    // hidden spans (used by copyLinkText)
+    if (codeDisplay) codeDisplay.innerText = url;
+    if (qrImage)     qrImage.src = `/qr/${code}`;
+
+    // inline banner
+    const banner = document.getElementById('resultBanner');
+    if (banner) banner.style.display = 'flex';
+
+    // inline code block
+    const codeBlock = document.getElementById('codeBlock');
+    const fourDigit = document.getElementById('fourDigitCode');
+    if (codeBlock) codeBlock.style.display = 'flex';
+    if (fourDigit) fourDigit.innerText = code;
+
+    // QR modal button
+    const showQrBtn = document.getElementById('showQrBtn');
+    if (showQrBtn) {
+      showQrBtn.onclick = () => openQrModal(url, code);
     }
-    if (codeDisplay) codeDisplay.innerText = `${window.location.origin}/get/${code}`;
-    if (qrImage) qrImage.src = `/qr/${code}`;
-    const numericDiv = document.getElementById('fourDigitCode');
-    if (numericDiv) numericDiv.innerText = code;
-    if (result) result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    // hide old result panel if present
+    if (result) result.classList.add('d-none');
   }
+
+  // ── QR Modal ──
+  window.openQrModal = function(url, code) {
+    const modal = document.getElementById('qrModal');
+    const img   = document.getElementById('qrModalImage');
+    const link  = document.getElementById('qrModalLink');
+    if (!modal) return;
+    if (img)  img.src  = `/qr/${code}`;
+    if (link) { link.href = url; link.innerText = url; }
+    modal.style.display = 'flex';
+  };
+
+  window.closeQrModal = function(e) {
+    if (e.target === document.getElementById('qrModal')) {
+      document.getElementById('qrModal').style.display = 'none';
+    }
+  };
 
   // ── OTP inputs ──
   codeInputs.forEach((input, index) => {
@@ -193,8 +295,8 @@ document.addEventListener('DOMContentLoaded', () => {
       input.classList.toggle('filled', input.value.length === 1);
       if (input.value.length === 1 && index < codeInputs.length - 1) {
         codeInputs[index + 1].focus();
-      } else if (index === codeInputs.length - 1 && receiveBtn) {
-        receiveBtn.focus();
+      } else if (index === codeInputs.length - 1 && input.value.length === 1) {
+        setTimeout(() => receiveSplitCode(), 120);
       }
     });
 

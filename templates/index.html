@@ -11,21 +11,13 @@
 </head>
 <body class="dark-mode">
 
-  <!-- ── Topbar ── -->
-  <nav class="cs-topbar">
-    <a class="cs-topbar-brand" href="/">
-      <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare">
-      <span>ClipShare</span>
-    </a>
-    <div class="cs-topbar-actions">
-      <button class="cs-icon-btn" id="info-toggle" data-bs-toggle="modal" data-bs-target="#infoModal" title="About">
-        <i class="fas fa-circle-info"></i>
-      </button>
-      <button class="cs-icon-btn" id="theme-toggle" title="Toggle theme">
-        <i id="theme-icon" class="fas fa-moon"></i>
-      </button>
-    </div>
-  </nav>
+  <!-- ── Fixed corner buttons ── -->
+  <button class="corner-btn corner-info" id="info-toggle" data-bs-toggle="modal" data-bs-target="#infoModal" title="About">
+    <i class="fas fa-circle-info"></i>
+  </button>
+  <button class="corner-btn corner-theme" id="theme-toggle" title="Toggle theme">
+    <i id="theme-icon" class="fas fa-moon"></i>
+  </button>
 
   <!-- ── About Modal ── -->
   <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
@@ -43,172 +35,208 @@
     </div>
   </div>
 
-  <!-- ── Hero ── -->
-  <section class="cs-hero">
-    <h1 class="cs-hero-title fade-in">
-      Instant <span class="accent-purple">Data</span> <span class="accent-green">Handoff</span>
-    </h1>
-    <p class="cs-hero-sub fade-in fade-in-delay-1">
-      Zero signup. Drop a file or paste text, grab a 4-digit code, and share it anywhere.
+  <!-- ── QR Modal ── -->
+  <div id="qrModal" class="qr-modal-overlay" style="display:none;" onclick="closeQrModal(event)">
+    <div class="qr-modal-box">
+      <button class="qr-modal-close" onclick="document.getElementById('qrModal').style.display='none'">
+        <i class="fas fa-xmark"></i>
+      </button>
+      <h3 class="qr-modal-title">Scan to access the shared files</h3>
+      <div class="qr-modal-img-wrap">
+        <img id="qrModalImage" src="" alt="QR Code">
+      </div>
+      <p class="qr-modal-hint">This QR code leads to:</p>
+      <a id="qrModalLink" href="#" class="qr-modal-link" target="_blank"></a>
+    </div>
+  </div>
+
+  <!-- ── Centered page layout ── -->
+  <div class="min-page">
+
+    <!-- Brand -->
+    <div class="min-brand fade-in">
+      <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare" class="min-logo">
+      <h1 class="min-title">Clip<span>Share</span></h1>
+    </div>
+    <p class="min-sub fade-in fade-in-delay-1">
+      Anonymous &amp; End-to-End instant file sharing.<br>
+      Files disappear after <span style="text-decoration:underline;text-underline-offset:3px;">retrieval</span>.
     </p>
 
-    <!-- Mode toggle pills -->
-    <div class="cs-mode-toggle fade-in fade-in-delay-2">
-      <button class="cs-mode-btn active" id="btnSend" onclick="showSend()">
-        <i class="fas fa-arrow-up-from-bracket me-1"></i> Send
+    <!-- Send / Receive toggle -->
+    <div class="min-toggle fade-in fade-in-delay-2">
+      <button class="min-tab active" id="btnSend" onclick="showSend()">
+        <i class="fas fa-arrow-up-from-bracket"></i> Send
       </button>
-      <button class="cs-mode-btn" id="btnReceive" onclick="showReceive()">
-        <i class="fas fa-arrow-down-to-bracket me-1"></i> Receive
+      <button class="min-tab" id="btnReceive" onclick="showReceive()">
+        <i class="fas fa-arrow-down-to-bracket"></i> Receive
       </button>
     </div>
-  </section>
 
-  <!-- ── Main ── -->
-  <main class="cs-main">
-    <div class="container" style="max-width:1000px;">
-      <div class="row justify-content-center g-4">
+    <!-- ── SEND panel ── -->
+    <div class="min-panel fade-in fade-in-delay-2" id="sendBox">
 
-        <!-- ── Send / Receive Panel ── -->
-        <div class="col-lg-5 col-md-10">
+      <!-- Result inline banner (shown after upload) -->
+      <div id="resultBanner" style="display:none;" class="result-banner">
+        <span><i class="fas fa-circle-check" style="color:#4ade80;margin-right:6px;"></i> Files uploaded!</span>
+        <button class="qr-icon-btn" id="showQrBtn" title="Show QR">
+          <i class="fas fa-qrcode"></i>
+        </button>
+      </div>
 
-          <!-- SEND BOX -->
-          <div class="upload-box fade-in fade-in-delay-2" id="sendBox">
+      <!-- Code display (shown after upload) -->
+      <div id="codeBlock" style="display:none;" class="code-block-inline">
+        <span class="code-block-number" id="fourDigitCode">—</span>
+        <button class="code-copy-btn" onclick="copyLinkText()" title="Copy link">
+          <i class="fas fa-copy"></i>
+        </button>
+        <span class="code-copy-label">Copy code</span>
+      </div>
 
-            <!-- File section -->
-            <span class="field-label"><i class="fas fa-paperclip me-1"></i> Files</span>
-            <form id="fileForm">
-              <!-- Drop zone (clicking it triggers the hidden input) -->
-              <div class="drop-zone" id="dropZone">
-                <i class="fas fa-cloud-arrow-up drop-zone-icon"></i>
-                <p class="drop-zone-title">Drag &amp; Drop</p>
-                <p class="drop-zone-sub">or click to browse files</p>
-                <input type="file" id="file" name="files" multiple
-                       style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0;">
-              </div>
-              <ul id="filePreviewList" class="list-unstyled mt-2 mb-0"></ul>
-              
-              <div class="ttl-wrapper mt-3 mb-3">
-                <span class="field-label" style="font-size:0.75rem;opacity:0.7;"><i class="fas fa-hourglass-half me-1"></i> Auto-Delete In</span>
-                <div class="ttl-pills d-flex flex-wrap gap-2 mt-1">
-                  <input type="radio" class="btn-check" name="fileTtl" id="fTtl5" value="5">
-                  <label class="ttl-pill" for="fTtl5">5m</label>
-                  <input type="radio" class="btn-check" name="fileTtl" id="fTtl10" value="10">
-                  <label class="ttl-pill" for="fTtl10">10m</label>
-                  <input type="radio" class="btn-check" name="fileTtl" id="fTtl60" value="60">
-                  <label class="ttl-pill" for="fTtl60">1h</label>
-                  <input type="radio" class="btn-check" name="fileTtl" id="fTtl1440" value="1440" checked>
-                  <label class="ttl-pill" for="fTtl1440">1d</label>
-                  <input type="radio" class="btn-check" name="fileTtl" id="fTtlCustom" value="custom">
-                  <label class="ttl-pill" for="fTtlCustom"><i class="fas fa-pen" style="font-size:0.75rem;"></i></label>
-                </div>
-                <div id="fileCustomTtlContainer" class="mt-2 d-none">
-                  <input type="number" id="fileCustomTtl" class="form-control" placeholder="Mins (e.g. 120)" min="1" max="43200" style="font-size:0.85rem; padding:6px 12px; background:var(--surface-3); border:1px solid var(--border-2); color:var(--text); border-radius:6px;">
-                </div>
-              </div>
-
-              <button class="upload-btn" type="submit">
-                <i class="fas fa-bolt"></i> Upload File(s)
-              </button>
-            </form>
-
-            <hr class="panel-divider">
-
-            <!-- Text section -->
-            <span class="field-label"><i class="fas fa-align-left me-1"></i> Text Clip</span>
-            <form id="textForm">
-                <textarea id="text" name="text" class="form-control" rows="4"
-                          placeholder="Paste your text, snippet, or config here…"></textarea>
-                
-                <div class="ttl-wrapper mt-3 mb-3">
-                  <span class="field-label" style="font-size:0.75rem;opacity:0.7;"><i class="fas fa-hourglass-half me-1"></i> Auto-Delete In</span>
-                  <div class="ttl-pills d-flex flex-wrap gap-2 mt-1">
-                    <input type="radio" class="btn-check" name="textTtl" id="tTtl5" value="5">
-                    <label class="ttl-pill" for="tTtl5">5m</label>
-                    <input type="radio" class="btn-check" name="textTtl" id="tTtl10" value="10">
-                    <label class="ttl-pill" for="tTtl10">10m</label>
-                    <input type="radio" class="btn-check" name="textTtl" id="tTtl60" value="60">
-                    <label class="ttl-pill" for="tTtl60">1h</label>
-                    <input type="radio" class="btn-check" name="textTtl" id="tTtl1440" value="1440" checked>
-                    <label class="ttl-pill" for="tTtl1440">1d</label>
-                    <input type="radio" class="btn-check" name="textTtl" id="tTtlCustom" value="custom">
-                    <label class="ttl-pill" for="tTtlCustom"><i class="fas fa-pen" style="font-size:0.75rem;"></i></label>
-                  </div>
-                  <div id="textCustomTtlContainer" class="mt-2 d-none">
-                    <input type="number" id="textCustomTtl" class="form-control" placeholder="Mins (e.g. 120)" min="1" max="43200" style="font-size:0.85rem; padding:6px 12px; background:var(--surface-3); border:1px solid var(--border-2); color:var(--text); border-radius:6px;">
-                  </div>
-                </div>
-
-                <button class="upload-btn" type="submit" style="background:var(--surface-3);box-shadow:none;border:1px solid var(--border-2);color:var(--text);">
-                <i class="fas fa-text-height"></i> Upload Text
-              </button>
-            </form>
+      <!-- FILE panel -->
+      <div id="filePanel">
+        <!-- Drop zone — only shown when no files yet -->
+        <div class="min-drop" id="dropZone">
+          <div class="min-drop-icons">
+            <i class="fas fa-file"></i>
+            <i class="fas fa-file" style="transform:translateY(-4px) scale(1.15);color:var(--text);"></i>
+            <i class="fas fa-copy"></i>
           </div>
+          <p class="min-drop-title">Upload your files</p>
+          <p class="min-drop-sub">Drag and drop your files here, click to select files,<br>or press <kbd>Ctrl+V</kbd> to paste text</p>
+          <input type="file" id="file" name="files" multiple
+                 style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0;">
+        </div>
 
-          <!-- RECEIVE BOX -->
-          <div class="upload-box d-none fade-in" id="receiveBox">
-            <span class="field-label"><i class="fas fa-key me-1"></i> Enter Your Code</span>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 16px;">Type the 4-digit code shared with you</p>
-            <div class="code-input-wrapper d-flex justify-content-center gap-2">
-              <input type="text" maxlength="1" class="code-input" id="code1" inputmode="numeric" />
-              <input type="text" maxlength="1" class="code-input" id="code2" inputmode="numeric" />
-              <input type="text" maxlength="1" class="code-input" id="code3" inputmode="numeric" />
-              <input type="text" maxlength="1" class="code-input" id="code4" inputmode="numeric" />
-            </div>
-            <button class="receive-btn" onclick="receiveSplitCode()">
-              <i class="fas fa-arrow-right"></i> Retrieve Content
+        <!-- File list (shown after files chosen) -->
+        <ul id="filePreviewList" class="list-unstyled min-file-list"></ul>
+
+        <!-- TTL -->
+        <div class="min-ttl">
+          <span class="min-ttl-label"><i class="fas fa-hourglass-half"></i> Auto-delete in</span>
+          <div class="min-ttl-pills">
+            <input type="radio" class="btn-check" name="fileTtl" id="fTtl5" value="5">
+            <label class="min-ttl-pill" for="fTtl5">5m</label>
+            <input type="radio" class="btn-check" name="fileTtl" id="fTtl10" value="10">
+            <label class="min-ttl-pill" for="fTtl10">10m</label>
+            <input type="radio" class="btn-check" name="fileTtl" id="fTtl60" value="60">
+            <label class="min-ttl-pill" for="fTtl60">1h</label>
+            <input type="radio" class="btn-check" name="fileTtl" id="fTtl1440" value="1440" checked>
+            <label class="min-ttl-pill" for="fTtl1440">1d</label>
+          </div>
+        </div>
+
+        <!-- Bottom action bar -->
+        <form id="fileForm">
+          <div class="action-bar">
+            <button class="action-bar-ghost" id="addMoreFilesBtn" type="button">
+              <i class="fas fa-paperclip"></i> Add Files
+              <input type="file" id="fileMore" name="filesMore" multiple
+                     style="position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0;">
             </button>
-            <p id="receiveError" class="d-none" style="font-size:0.82rem;color:#f87171;margin-top:10px;text-align:center;">
-              <i class="fas fa-triangle-exclamation me-1"></i> Invalid code or content not found.
-            </p>
+            <button class="action-bar-ghost" id="addTextBtn" type="button">
+              <i class="fas fa-align-left"></i> Add Text
+            </button>
+            <button class="action-bar-solid" type="submit" id="uploadFilesBtn">
+              <i class="fas fa-arrow-up-from-bracket"></i> Upload Files
+            </button>
           </div>
+        </form>
+      </div>
 
-        </div>
-
-        <!-- ── Result Panel ── -->
-        <div class="col-lg-5 col-md-10 d-flex align-items-start justify-content-center">
-          <div id="result" class="result-panel w-100 d-none">
-            <div class="success-badge">
-              <i class="fas fa-circle-check"></i> Transfer Complete
-            </div>
-
-            <p class="code-label">Universal Code</p>
-            <div class="big-code" id="fourDigitCode">—</div>
-
-            <div class="share-link-box">
-              <i class="fas fa-link" style="color:var(--text-muted);font-size:0.8rem;flex-shrink:0;"></i>
-              <span id="codeDisplay"></span>
-            </div>
-
-            <div class="result-actions">
-              <button class="btn-action-primary" onclick="copyLinkText()">
-                <i class="fas fa-copy"></i> Copy Link
-              </button>
-              <button class="btn-action-outline" onclick="showSend()">
-                <i class="fas fa-plus"></i> New Transfer
-              </button>
-            </div>
-            <span id="copyMsg" class="d-none" style="display:inline-block;margin-top:8px;">Copied!</span>
-
-            <div class="qr-wrapper">
-              <p class="qr-label">Scan to Receive</p>
-              <div class="qr-frame">
-                <img id="qrImage" src="" alt="QR Code">
-              </div>
+      <!-- TEXT panel -->
+      <div id="textPanel" style="display:none;">
+        <form id="textForm">
+          <textarea id="text" name="text" class="min-textarea"
+                    placeholder="Paste your text here…" rows="6"></textarea>
+          <div class="min-ttl" style="margin-top:12px;">
+            <span class="min-ttl-label"><i class="fas fa-hourglass-half"></i> Auto-delete in</span>
+            <div class="min-ttl-pills">
+              <input type="radio" class="btn-check" name="textTtl" id="tTtl5" value="5">
+              <label class="min-ttl-pill" for="tTtl5">5m</label>
+              <input type="radio" class="btn-check" name="textTtl" id="tTtl10" value="10">
+              <label class="min-ttl-pill" for="tTtl10">10m</label>
+              <input type="radio" class="btn-check" name="textTtl" id="tTtl60" value="60">
+              <label class="min-ttl-pill" for="tTtl60">1h</label>
+              <input type="radio" class="btn-check" name="textTtl" id="tTtl1440" value="1440" checked>
+              <label class="min-ttl-pill" for="tTtl1440">1d</label>
             </div>
           </div>
-        </div>
+          <div class="action-bar" style="margin-top:12px;">
+            <button class="action-bar-ghost" id="backToFileBtn" type="button">
+              <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button class="action-bar-solid" type="submit">
+              <i class="fas fa-check"></i> Upload Text
+            </button>
+          </div>
+        </form>
+      </div>
 
+    </div>
+
+    <!-- ── RECEIVE panel ── -->
+    <div class="min-panel d-none fade-in" id="receiveBox">
+      <p class="min-receive-title">Receive Files</p>
+      <p class="min-receive-sub">Enter your code in format 1234</p>
+      <div class="min-otp">
+        <input type="text" maxlength="1" class="code-input" id="code1" inputmode="numeric" />
+        <input type="text" maxlength="1" class="code-input" id="code2" inputmode="numeric" />
+        <input type="text" maxlength="1" class="code-input" id="code3" inputmode="numeric" />
+        <input type="text" maxlength="1" class="code-input" id="code4" inputmode="numeric" />
+      </div>
+      <p id="receiveError" class="d-none min-error">
+        <i class="fas fa-triangle-exclamation me-1"></i> Invalid code or content not found.
+      </p>
+      <div class="action-bar" style="margin-top:20px;">
+        <button class="action-bar-solid" onclick="receiveSplitCode()" style="flex:1;">
+          <i class="fas fa-arrow-down-to-bracket"></i> Retrieve Files
+        </button>
       </div>
     </div>
-  </main>
 
-  <!-- ── Status Bar ── -->
-  <div class="cs-statusbar">
-    <span><span class="status-dot"></span> Network Status: Optimal</span>
-    <span><i class="fas fa-lock" style="margin-right:5px;"></i> Anonymous Mode</span>
+    <!-- hidden elements still used by script.js -->
+    <span id="codeDisplay" style="display:none;"></span>
+    <span id="copyMsg"     style="display:none;"></span>
+    <img  id="qrImage"     src="" alt="" style="display:none;">
+
+    <p class="min-footer">Maximum files, each 1GB allowed. No account needed.</p>
+
   </div>
+
+  <!-- Cursor spotlight -->
+  <div id="cursor-glow"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script>
+    // ── Cursor spotlight ──
+    const glow = document.getElementById('cursor-glow');
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let cx = mx, cy = my;
+
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+    (function animGlow() {
+      cx += (mx - cx) * 0.12;
+      cy += (my - cy) * 0.12;
+      glow.style.left = cx + 'px';
+      glow.style.top  = cy + 'px';
+      requestAnimationFrame(animGlow);
+    })();
+
+    // ── Magnetic buttons (corner + min-tab) ──
+    document.querySelectorAll('.corner-btn, .min-tab, .min-btn-solid, .min-btn-ghost').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const r = btn.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width  / 2);
+        const dy = e.clientY - (r.top  + r.height / 2);
+        btn.style.transform = `translate(${dx * 0.18}px, ${dy * 0.18}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+  </script>
 </body>
 </html>

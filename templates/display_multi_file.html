@@ -99,22 +99,19 @@
       </button>
     </div>
   </nav>
-
   <!-- ── Content ── -->
-  <div style="min-height:100vh;padding:90px 16px 70px;position:relative;z-index:1;">
+  <div style="min-height:100vh;padding:90px 16px 40px;position:relative;z-index:1;">
     <div style="max-width:640px;margin:0 auto;">
 
       <!-- Page header -->
-      <div class="bundle-header fade-in">
-        <div>
-          <div class="success-badge" style="margin-bottom:8px;">
-            <i class="fas fa-circle-check"></i> Transfer Complete
-          </div>
-          <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:0;">File Bundle</h2>
-          {% if expiry_msg %}
-          <div style="font-size:0.75rem;color:#f87171;margin-top:4px;"><i class="fas fa-clock me-1"></i>{{ expiry_msg }}</div>
-          {% endif %}
+      <div class="fade-in" style="text-align:center;margin-bottom:24px;">
+        <div class="success-badge" style="margin-bottom:10px;">
+          <i class="fas fa-circle-check"></i> Transfer Complete
         </div>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:0 0 18px;">File Bundle</h2>
+        {% if expiry_msg %}
+        <div style="font-size:0.75rem;color:#f87171;margin-top:4px;"><i class="fas fa-clock me-1"></i>{{ expiry_msg }}</div>
+        {% endif %}
         <a href="/download_zip/{{ code }}" class="zip-btn">
           <i class="fas fa-file-zipper"></i> Download All as ZIP
         </a>
@@ -182,11 +179,6 @@
     </div>
   </div>
 
-  <!-- ── Status Bar ── -->
-  <div class="cs-statusbar">
-    <span><span class="status-dot"></span> Network Status: Optimal</span>
-    <span><i class="fas fa-lock" style="margin-right:5px;"></i> Anonymous Mode</span>
-  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>

@@ -35,14 +35,33 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Error redirect handling ──
   const params = new URLSearchParams(window.location.search);
   if (params.get('error') === 'invalid') {
-    showReceive();
-    document.getElementById('receiveError').classList.remove('d-none');
-    codeInputs.forEach(inp => inp.value = '');
-    const code = params.get('code') || '';
-    for (let i = 0; i < code.length && i < codeInputs.length; i++) {
-      codeInputs[i].value = code[i];
-      codeInputs[i].classList.toggle('filled', !!code[i]);
+    // Clean URL immediately so it never blocks interaction on refresh
+    const errCode = params.get('code') || '';
+    window.history.replaceState({}, '', '/');
+
+    // Show toast
+    const toastMsg = errCode
+      ? `Code <strong>${errCode}</strong> was not found or has expired.`
+      : 'Code not found or expired.';
+    if (typeof window.showErrorToast === 'function') {
+      window.showErrorToast(toastMsg);
     }
+
+    // Switch to receive tab WITHOUT clearing inputs
+    const sendBox    = document.getElementById('sendBox');
+    const receiveBox = document.getElementById('receiveBox');
+    const btnSend    = document.getElementById('btnSend');
+    const btnReceive = document.getElementById('btnReceive');
+    if (receiveBox) receiveBox.classList.remove('d-none');
+    if (sendBox)    sendBox.classList.add('d-none');
+    if (btnReceive) btnReceive.classList.add('active');
+    if (btnSend)    btnSend.classList.remove('active');
+
+    // Pre-fill digits
+    codeInputs.forEach((inp, i) => {
+      inp.value = errCode[i] || '';
+      inp.classList.toggle('filled', !!errCode[i]);
+    });
     if (codeInputs[0]) codeInputs[0].focus();
   }
 
@@ -350,32 +369,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // ── Mode switching ──
-  window.showSend = function () {
-    const sendBox    = document.getElementById('sendBox');
-    const receiveBox = document.getElementById('receiveBox');
-    const btnSend    = document.getElementById('btnSend');
-    const btnReceive = document.getElementById('btnReceive');
+  // ── Mode switching (smooth crossfade, no layout shift) ──
+  function switchPanel(showId, hideId, activateBtn, deactivateBtn, afterSwitch) {
+    const panel = document.querySelector('.min-panel');
+    const showEl = document.getElementById(showId);
+    const hideEl = document.getElementById(hideId);
+    const btnOn  = document.getElementById(activateBtn);
+    const btnOff = document.getElementById(deactivateBtn);
 
-    if (sendBox)    sendBox.classList.remove('d-none');
-    if (receiveBox) receiveBox.classList.add('d-none');
-    if (result)     result.classList.add('d-none');
-    if (btnSend)    btnSend.classList.add('active');
-    if (btnReceive) btnReceive.classList.remove('active');
+    if (btnOn)  btnOn.classList.add('active');
+    if (btnOff) btnOff.classList.remove('active');
+
+    if (panel) panel.classList.add('panel-switching');
+
+    setTimeout(() => {
+      if (showEl) showEl.classList.remove('d-none');
+      if (hideEl) hideEl.classList.add('d-none');
+      if (result) result.classList.add('d-none');
+      if (afterSwitch) afterSwitch();
+      if (panel) panel.classList.remove('panel-switching');
+    }, 180);
+  }
+
+  window.showSend = function () {
+    switchPanel('sendBox', 'receiveBox', 'btnSend', 'btnReceive');
   };
 
   window.showReceive = function () {
-    const sendBox    = document.getElementById('sendBox');
-    const receiveBox = document.getElementById('receiveBox');
-    const btnSend    = document.getElementById('btnSend');
-    const btnReceive = document.getElementById('btnReceive');
-
-    if (receiveBox) receiveBox.classList.remove('d-none');
-    if (sendBox)    sendBox.classList.add('d-none');
-    if (result)     result.classList.add('d-none');
-    if (btnReceive) btnReceive.classList.add('active');
-    if (btnSend)    btnSend.classList.remove('active');
-    codeInputs.forEach(inp => { inp.value = ''; inp.classList.remove('filled'); });
+    switchPanel('receiveBox', 'sendBox', 'btnReceive', 'btnSend', () => {
+      codeInputs.forEach(inp => { inp.value = ''; inp.classList.remove('filled'); });
+    });
   };
 
   // ── Copy link ──

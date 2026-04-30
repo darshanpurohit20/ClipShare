@@ -1067,6 +1067,7 @@ body.dark-mode .btn-close {
   margin-bottom: 16px;
   width: 100%;
   max-width: 560px;
+  flex-shrink: 0;
 }
 
 .min-tab {
@@ -1107,6 +1108,12 @@ body.dark-mode .btn-close {
   padding: 28px;
   position: relative;
   overflow: hidden;
+  min-height: 320px;
+  transition: opacity 0.2s ease;
+}
+
+.min-panel.panel-switching {
+  opacity: 0;
 }
 
 /* Drop zone */
@@ -1724,12 +1731,28 @@ body.dark-mode .btn-close {
 
 .corner-info {
   top: 16px;
-  right: 16px;
+  left: 16px;
 }
 
 .corner-theme {
   bottom: 16px;
   right: 16px;
+}
+
+@media (max-width: 640px) {
+  .action-bar-ghost .btn-label {
+    display: none !important;
+  }
+  .action-bar-ghost {
+    flex: none !important;
+    width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    min-width: unset !important;
+    overflow: visible !important;
+    white-space: normal !important;
+  }
 }
 
 /* ── Error Toast ── */

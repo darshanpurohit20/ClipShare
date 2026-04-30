@@ -142,15 +142,15 @@
         <form id="fileForm">
           <div class="action-bar">
             <button class="action-bar-ghost" id="addMoreFilesBtn" type="button">
-              <i class="fas fa-paperclip"></i> Add Files
+              <i class="fas fa-paperclip"></i><span class="btn-label"> Add Files</span>
               <input type="file" id="fileMore" name="filesMore" multiple
                      style="position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0;">
             </button>
             <button class="action-bar-ghost" id="addTextBtn" type="button">
-              <i class="fas fa-align-left"></i> Add Text
+              <i class="fas fa-align-left"></i><span class="btn-label"> Add Text</span>
             </button>
             <button class="action-bar-solid" type="submit" id="uploadFilesBtn">
-              <i class="fas fa-arrow-up-from-bracket"></i> Upload Files
+              <i class="fas fa-arrow-up-from-bracket"></i><span class="btn-label"> Upload</span>
             </button>
           </div>
         </form>
@@ -179,10 +179,10 @@
           </div>
           <div class="action-bar" style="margin-top:12px;">
             <button class="action-bar-ghost" id="backToFileBtn" type="button">
-              <i class="fas fa-arrow-left"></i> Back
+              <i class="fas fa-arrow-left"></i><span class="btn-label"> Back</span>
             </button>
             <button class="action-bar-solid" type="submit">
-              <i class="fas fa-check"></i> Upload Text
+              <i class="fas fa-check"></i><span class="btn-label"> Send</span>
             </button>
           </div>
         </form>
@@ -225,44 +225,19 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   <script>
-    // ── URL error param handling ──
-    (function handleUrlError() {
-      const params = new URLSearchParams(window.location.search);
-      const err  = params.get('error');
-      const code = params.get('code');
-      if (!err) return;
-
-      // Show toast
-      const toast   = document.getElementById('errorToast');
+    // ── Toast for URL error (called from script.js handler) ──
+    window.showErrorToast = function(msg) {
+      const toast    = document.getElementById('errorToast');
       const toastMsg = document.getElementById('errorToastMsg');
-      if (toast) {
-        const msgs = {
-          invalid: code
-            ? `Code <strong>${code}</strong> was not found or has expired.`
-            : 'Code not found or expired.'
-        };
-        if (toastMsg) toastMsg.innerHTML = msgs[err] || 'Something went wrong.';
-        toast.style.display = 'flex';
-        // auto-dismiss after 6s
-        setTimeout(() => {
-          toast.style.animation = 'toastOut 0.35s ease forwards';
-          setTimeout(() => { toast.style.display = 'none'; }, 350);
-        }, 6000);
-      }
-
-      // Switch to Receive tab and pre-fill digits
-      if (code && code.length === 4) {
-        showReceive();
-        const digits = code.split('');
-        ['code1','code2','code3','code4'].forEach((id, i) => {
-          const el = document.getElementById(id);
-          if (el) { el.value = digits[i]; el.classList.add('filled'); }
-        });
-      }
-
-      // Clean URL without reload
-      window.history.replaceState({}, '', '/');
-    })();
+      if (!toast) return;
+      if (toastMsg) toastMsg.innerHTML = msg;
+      toast.style.display = 'flex';
+      toast.style.animation = 'toastIn 0.4s cubic-bezier(0.16,1,0.3,1) forwards';
+      setTimeout(() => {
+        toast.style.animation = 'toastOut 0.35s ease forwards';
+        setTimeout(() => { toast.style.display = 'none'; }, 350);
+      }, 6000);
+    };
 
     // ── Cursor spotlight ──
     const glow = document.getElementById('cursor-glow');

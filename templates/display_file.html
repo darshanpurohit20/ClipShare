@@ -3,59 +3,98 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ClipShare</title>
+  <title>ClipShare — File Ready</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="icon" type="image/png" href="/static/images/logow.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <a href="/" class="btn home-btn  scann">
-        <i class="fas fa-home me-1"></i> Home
+<body class="dark-mode">
+
+  <!-- ── Topbar ── -->
+  <nav class="cs-topbar">
+    <a class="cs-topbar-brand" href="/">
+      <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare">
+      <span>ClipShare</span>
+    </a>
+    <div class="cs-topbar-actions">
+      <a href="/" class="cs-icon-btn" title="Home" style="text-decoration:none;">
+        <i class="fas fa-house"></i>
       </a>
-      
-  <button id="theme-toggle" class="theme-toggle">
-    <i id="theme-icon" class="fas fa-moon"></i>
-  </button>
+      <button class="cs-icon-btn" id="theme-toggle" title="Toggle theme">
+        <i id="theme-icon" class="fas fa-moon"></i>
+      </button>
+    </div>
+  </nav>
 
-  <h1 class="brand-title">
-    <img id="clipshare-logo" class="img" src="/static/images/logow.png">
-    <span>ClipShare</span>
-  </h1>
+  <!-- ── Content ── -->
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 16px 60px;position:relative;z-index:1;">
+    <div style="width:100%;max-width:500px;">
 
-  <p class="brand-line">Anonymous file & text sharing via code or QR</p>
-  <h2 class="scann">📎 File Ready to Download</h2>
-  <p class="scann"><strong>Filename:</strong> {{ filename }}</p>
-  <a href="{{ url_for('download_bundle_file', code=code, filename=filename) }}" class="download-btn" download>
-    <i class="fas fa-download me-2 "></i> Download File
-  </a>
-  
+      <div class="panel-card fade-in" style="text-align:center;padding:40px 32px;">
+        <!-- Accent line is added via ::before in CSS -->
+
+        <div class="success-badge" style="margin-bottom:20px;">
+          <i class="fas fa-circle-check"></i> File Ready
+        </div>
+
+        <!-- File icon -->
+        <div style="width:72px;height:72px;border-radius:18px;background:rgba(124,111,255,0.12);border:1px solid rgba(124,111,255,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2rem;color:var(--accent);">
+          <i class="fas fa-file-arrow-down"></i>
+        </div>
+
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;margin:0 0 6px;word-break:break-all;">{{ filename }}</h2>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 10px;">Ready to download</p>
+        {% if expiry_msg %}
+        <p style="font-size:0.75rem;color:#f87171;margin:0 0 28px;"><i class="fas fa-clock me-1"></i>{{ expiry_msg }}</p>
+        {% else %}
+        <div style="margin-bottom:28px;"></div>
+        {% endif %}
+
+        <a href="{{ url_for('download_bundle_file', code=code, filename=filename) }}"
+           class="download-btn" download>
+          <i class="fas fa-download"></i> Download File
+        </a>
+
+        <div style="margin-top:24px;">
+          <a href="/" class="btn-action-outline" style="text-decoration:none;">
+            <i class="fas fa-plus"></i> New Transfer
+          </a>
+        </div>
+      </div>
+
     </div>
   </div>
 
+  <!-- ── Status Bar ── -->
+  <div class="cs-statusbar">
+    <span><span class="status-dot"></span> Network Status: Optimal</span>
+    <span><i class="fas fa-lock" style="margin-right:5px;"></i> Anonymous Mode</span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const toggleBtn = document.getElementById('theme-toggle');
       const themeIcon = document.getElementById('theme-icon');
-      const logo = document.getElementById('clipshare-logo');
+      const logo      = document.getElementById('clipshare-logo');
 
-      toggleBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        const isDark = document.body.classList.contains('dark-mode');
-        themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-        logo.src = isDark ? '/static/images/logow.png' : '/static/images/logob.png';
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      });
+      (function applyTheme() {
+        const saved  = localStorage.getItem('theme');
+        const isDark = saved === null ? true : saved === 'dark';
+        document.body.classList.toggle('dark-mode', isDark);
+        if (themeIcon) themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        if (logo) logo.src = isDark ? '/static/images/logow.png' : '/static/images/logob.png';
+      })();
 
-      const theme = localStorage.getItem('theme');
-      if (theme === 'dark') {
-        document.body.classList.add('dark-mode');
-        themeIcon.className = 'fas fa-sun';
-        logo.src = '/static/images/logow.png';
-      } else {
-        themeIcon.className = 'fas fa-moon';
-        logo.src = '/static/images/logob.png';
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          document.body.classList.toggle('dark-mode');
+          const isDark = document.body.classList.contains('dark-mode');
+          if (themeIcon) themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+          if (logo) logo.src = isDark ? '/static/images/logow.png' : '/static/images/logob.png';
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
       }
     });
   </script>

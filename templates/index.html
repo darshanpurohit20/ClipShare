@@ -3,23 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ClipShare</title>
+  <title>ClipShare — Instant File & Text Sharing</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="icon" type="image/png" href="/static/images/logow.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-
 </head>
-<body>
+<body class="dark-mode">
 
+  <!-- ── Topbar ── -->
+  <nav class="cs-topbar">
+    <a class="cs-topbar-brand" href="/">
+      <img id="clipshare-logo" src="/static/images/logow.png" alt="ClipShare">
+      <span>ClipShare</span>
+    </a>
+    <div class="cs-topbar-actions">
+      <button class="cs-icon-btn" id="info-toggle" data-bs-toggle="modal" data-bs-target="#infoModal" title="About">
+        <i class="fas fa-circle-info"></i>
+      </button>
+      <button class="cs-icon-btn" id="theme-toggle" title="Toggle theme">
+        <i id="theme-icon" class="fas fa-moon"></i>
+      </button>
+    </div>
+  </nav>
 
-<button id="info-toggle" class="theme-toggle" data-bs-toggle="modal" data-bs-target="#infoModal">
-    <i class="fas fa-info-circle"></i>
-  </button>
-  
-  
- 
+  <!-- ── About Modal ── -->
   <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -28,91 +36,179 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p><strong>ClipShare</strong> is a lightweight, anonymous file & text sharing app that generates a unique code and QR for every upload.</p>
-          <p>Built by <a href="https://github.com/darshanpurohit20" target="_blank">Darshan Purohit</a></p>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  
-  <button id="theme-toggle" class="theme-toggle">
-    <i id="theme-icon" class="fas fa-moon"></i>
-  </button>
-
-  <h1 class="brand-title">
-    <img id="clipshare-logo" class="img" src="/static/images/logow.png">
-    <span>ClipShare</span>
-  </h1>
-
-  <p class="brand-line">Anonymous file & text sharing via code or QR</p>
-
-  <div class="toggle-btns">
-    <button class="btn btn-light scann" onclick="showSend()">Send</button>
-    <button class="btn btn-dark border border-light scann" onclick="showReceive()">Receive</button>
-  </div>
-
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-
-      <div class="col-md-5">
-   
-        <div class="upload-box" id="sendBox">
-          <form id="fileForm">
-            <label for="file" class="form-label scann">Upload Files <span style="font-size:0.8em; opacity:0.6;">(select one or more)</span></label>
-            <input type="file" id="file" name="files" class="form-control" multiple>
-            <ul id="filePreviewList" class="mt-2 mb-1 list-unstyled small scann" style="padding-left: 4px;"></ul>
-            <button class="upload-btn scann" type="submit">Upload File(s)</button>
-          </form>
-
-          <form id="textForm">
-            <label for="text" class="form-label mt-3 scann">Paste Text</label>
-            <textarea id="text" name="text" class="form-control" rows="4" placeholder="Paste your text here..."></textarea>
-            <button class="upload-btn  scann" type="submit">Upload Text</button>
-          </form>
-        </div>
-
-   
-        <div class="upload-box d-none" id="receiveBox">
-          <h5 class="text-center scann">Receive Files</h5>
-          <p class="text-center scann">Enter your code in format 1234</p>
-          <div class="code-input-wrapper d-flex justify-content-center gap-2">
-            <input type="text" maxlength="1" class="code-input text-center scann" id="code1" />
-            <input type="text" maxlength="1" class="code-input text-center scann" id="code2" />
-            <input type="text" maxlength="1" class="code-input text-center scann" id="code3" />
-            <input type="text" maxlength="1" class="code-input text-center scann" id="code4" />
-          </div>
-          <button class="btn btn-dark border border-light w-100 mt-3 scann" onclick="receiveSplitCode()">Receive</button>
-          <p id="receiveError" class="text-danger mt-2 d-none text-center scann">Invalid code or content not found.</p>
-        </div>
-        
-        
-      </div>
-
-    
-      <div class="col-md-5 d-flex align-items-center justify-content-center">
-        <div id="result" class="text-center d-none">
-          <div id="numericCode" class="mt-3">
-            <h5 class="scann">Your Code:</h5>
-            <p id="fourDigitCode" class="fw-bold fs-4 scann"></p>
-          </div>
-          
-          <h5 class="scann">🌐 Share this Link:</h5>
-          <p id="codeDisplay" class="scann"></p>
-          <button id="copyBtn" onclick="copyLinkText()" class="btn btn-dark border border-light scann">Copy Link</button>
-          <span id="copyMsg" class="scann d-none ms-2">Copied!</span>
-          <br>
-          <img id="qrImage" src="" alt="QR Code" class="img-fluid mt-3" style="max-width: 200px;"/>
-          <br>
-          <h5 class="scann">Scan It</h5>
+          <p><strong>ClipShare</strong> is a lightweight, anonymous file &amp; text sharing app. Upload anything, get a 4-digit code and QR — share instantly, no login required.</p>
+          <p style="margin:0;">Built by <a href="https://github.com/darshanpurohit20" target="_blank">Darshan Purohit</a></p>
         </div>
       </div>
     </div>
   </div>
 
- 
+  <!-- ── Hero ── -->
+  <section class="cs-hero">
+    <h1 class="cs-hero-title fade-in">
+      Instant <span class="accent-purple">Data</span> <span class="accent-green">Handoff</span>
+    </h1>
+    <p class="cs-hero-sub fade-in fade-in-delay-1">
+      Zero signup. Drop a file or paste text, grab a 4-digit code, and share it anywhere.
+    </p>
+
+    <!-- Mode toggle pills -->
+    <div class="cs-mode-toggle fade-in fade-in-delay-2">
+      <button class="cs-mode-btn active" id="btnSend" onclick="showSend()">
+        <i class="fas fa-arrow-up-from-bracket me-1"></i> Send
+      </button>
+      <button class="cs-mode-btn" id="btnReceive" onclick="showReceive()">
+        <i class="fas fa-arrow-down-to-bracket me-1"></i> Receive
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Main ── -->
+  <main class="cs-main">
+    <div class="container" style="max-width:1000px;">
+      <div class="row justify-content-center g-4">
+
+        <!-- ── Send / Receive Panel ── -->
+        <div class="col-lg-5 col-md-10">
+
+          <!-- SEND BOX -->
+          <div class="upload-box fade-in fade-in-delay-2" id="sendBox">
+
+            <!-- File section -->
+            <span class="field-label"><i class="fas fa-paperclip me-1"></i> Files</span>
+            <form id="fileForm">
+              <!-- Drop zone (clicking it triggers the hidden input) -->
+              <div class="drop-zone" id="dropZone">
+                <i class="fas fa-cloud-arrow-up drop-zone-icon"></i>
+                <p class="drop-zone-title">Drag &amp; Drop</p>
+                <p class="drop-zone-sub">or click to browse files</p>
+                <input type="file" id="file" name="files" multiple
+                       style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0;">
+              </div>
+              <ul id="filePreviewList" class="list-unstyled mt-2 mb-0"></ul>
+              
+              <div class="ttl-wrapper mt-3 mb-3">
+                <span class="field-label" style="font-size:0.75rem;opacity:0.7;"><i class="fas fa-hourglass-half me-1"></i> Auto-Delete In</span>
+                <div class="ttl-pills d-flex flex-wrap gap-2 mt-1">
+                  <input type="radio" class="btn-check" name="fileTtl" id="fTtl5" value="5">
+                  <label class="ttl-pill" for="fTtl5">5m</label>
+                  <input type="radio" class="btn-check" name="fileTtl" id="fTtl10" value="10">
+                  <label class="ttl-pill" for="fTtl10">10m</label>
+                  <input type="radio" class="btn-check" name="fileTtl" id="fTtl60" value="60">
+                  <label class="ttl-pill" for="fTtl60">1h</label>
+                  <input type="radio" class="btn-check" name="fileTtl" id="fTtl1440" value="1440" checked>
+                  <label class="ttl-pill" for="fTtl1440">1d</label>
+                  <input type="radio" class="btn-check" name="fileTtl" id="fTtlCustom" value="custom">
+                  <label class="ttl-pill" for="fTtlCustom"><i class="fas fa-pen" style="font-size:0.75rem;"></i></label>
+                </div>
+                <div id="fileCustomTtlContainer" class="mt-2 d-none">
+                  <input type="number" id="fileCustomTtl" class="form-control" placeholder="Mins (e.g. 120)" min="1" max="43200" style="font-size:0.85rem; padding:6px 12px; background:var(--surface-3); border:1px solid var(--border-2); color:var(--text); border-radius:6px;">
+                </div>
+              </div>
+
+              <button class="upload-btn" type="submit">
+                <i class="fas fa-bolt"></i> Upload File(s)
+              </button>
+            </form>
+
+            <hr class="panel-divider">
+
+            <!-- Text section -->
+            <span class="field-label"><i class="fas fa-align-left me-1"></i> Text Clip</span>
+            <form id="textForm">
+                <textarea id="text" name="text" class="form-control" rows="4"
+                          placeholder="Paste your text, snippet, or config here…"></textarea>
+                
+                <div class="ttl-wrapper mt-3 mb-3">
+                  <span class="field-label" style="font-size:0.75rem;opacity:0.7;"><i class="fas fa-hourglass-half me-1"></i> Auto-Delete In</span>
+                  <div class="ttl-pills d-flex flex-wrap gap-2 mt-1">
+                    <input type="radio" class="btn-check" name="textTtl" id="tTtl5" value="5">
+                    <label class="ttl-pill" for="tTtl5">5m</label>
+                    <input type="radio" class="btn-check" name="textTtl" id="tTtl10" value="10">
+                    <label class="ttl-pill" for="tTtl10">10m</label>
+                    <input type="radio" class="btn-check" name="textTtl" id="tTtl60" value="60">
+                    <label class="ttl-pill" for="tTtl60">1h</label>
+                    <input type="radio" class="btn-check" name="textTtl" id="tTtl1440" value="1440" checked>
+                    <label class="ttl-pill" for="tTtl1440">1d</label>
+                    <input type="radio" class="btn-check" name="textTtl" id="tTtlCustom" value="custom">
+                    <label class="ttl-pill" for="tTtlCustom"><i class="fas fa-pen" style="font-size:0.75rem;"></i></label>
+                  </div>
+                  <div id="textCustomTtlContainer" class="mt-2 d-none">
+                    <input type="number" id="textCustomTtl" class="form-control" placeholder="Mins (e.g. 120)" min="1" max="43200" style="font-size:0.85rem; padding:6px 12px; background:var(--surface-3); border:1px solid var(--border-2); color:var(--text); border-radius:6px;">
+                  </div>
+                </div>
+
+                <button class="upload-btn" type="submit" style="background:var(--surface-3);box-shadow:none;border:1px solid var(--border-2);color:var(--text);">
+                <i class="fas fa-text-height"></i> Upload Text
+              </button>
+            </form>
+          </div>
+
+          <!-- RECEIVE BOX -->
+          <div class="upload-box d-none fade-in" id="receiveBox">
+            <span class="field-label"><i class="fas fa-key me-1"></i> Enter Your Code</span>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 16px;">Type the 4-digit code shared with you</p>
+            <div class="code-input-wrapper d-flex justify-content-center gap-2">
+              <input type="text" maxlength="1" class="code-input" id="code1" inputmode="numeric" />
+              <input type="text" maxlength="1" class="code-input" id="code2" inputmode="numeric" />
+              <input type="text" maxlength="1" class="code-input" id="code3" inputmode="numeric" />
+              <input type="text" maxlength="1" class="code-input" id="code4" inputmode="numeric" />
+            </div>
+            <button class="receive-btn" onclick="receiveSplitCode()">
+              <i class="fas fa-arrow-right"></i> Retrieve Content
+            </button>
+            <p id="receiveError" class="d-none" style="font-size:0.82rem;color:#f87171;margin-top:10px;text-align:center;">
+              <i class="fas fa-triangle-exclamation me-1"></i> Invalid code or content not found.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- ── Result Panel ── -->
+        <div class="col-lg-5 col-md-10 d-flex align-items-start justify-content-center">
+          <div id="result" class="result-panel w-100 d-none">
+            <div class="success-badge">
+              <i class="fas fa-circle-check"></i> Transfer Complete
+            </div>
+
+            <p class="code-label">Universal Code</p>
+            <div class="big-code" id="fourDigitCode">—</div>
+
+            <div class="share-link-box">
+              <i class="fas fa-link" style="color:var(--text-muted);font-size:0.8rem;flex-shrink:0;"></i>
+              <span id="codeDisplay"></span>
+            </div>
+
+            <div class="result-actions">
+              <button class="btn-action-primary" onclick="copyLinkText()">
+                <i class="fas fa-copy"></i> Copy Link
+              </button>
+              <button class="btn-action-outline" onclick="showSend()">
+                <i class="fas fa-plus"></i> New Transfer
+              </button>
+            </div>
+            <span id="copyMsg" class="d-none" style="display:inline-block;margin-top:8px;">Copied!</span>
+
+            <div class="qr-wrapper">
+              <p class="qr-label">Scan to Receive</p>
+              <div class="qr-frame">
+                <img id="qrImage" src="" alt="QR Code">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ── Status Bar ── -->
+  <div class="cs-statusbar">
+    <span><span class="status-dot"></span> Network Status: Optimal</span>
+    <span><i class="fas fa-lock" style="margin-right:5px;"></i> Anonymous Mode</span>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

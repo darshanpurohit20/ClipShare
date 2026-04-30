@@ -4,6 +4,9 @@ import os
 import qrcode
 import io
 import secrets
+import time
+import threading
+import shutil
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -27,6 +30,21 @@ def generate_code():
         attempts += 1
     return None
 
+def cleanup_expired_data():
+    while True:
+        time.sleep(60)
+        current_time = time.time()
+        expired_codes = [code for code, data in data_store.items() if 'expires_at' in data and current_time > data['expires_at']]
+        
+        for code in expired_codes:
+            data = data_store.pop(code, None)
+            if data and data['type'] in ('file', 'multi_file'):
+                folder = os.path.join(app.config['UPLOAD_FOLDER'], code)
+                if os.path.exists(folder):
+                    shutil.rmtree(folder, ignore_errors=True)
+
+threading.Thread(target=cleanup_expired_data, daemon=True).start()
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -36,8 +54,11 @@ def index():
 @app.route('/upload_text', methods=['POST'])
 def upload_text():
     text = request.form['text']
+    ttl_mins = min(max(int(request.form.get('ttl', 1440)), 1), 43200) # Default 1 day, max 30 days
     code = generate_code()
-    data_store[code] = {'type': 'text', 'content': text}
+    if not code:
+        return jsonify({'error': 'Server full'}), 503
+    data_store[code] = {'type': 'text', 'content': text, 'expires_at': time.time() + ttl_mins * 60}
     return jsonify({'code': code})
 
 @app.route('/upload_file', methods=['POST'])
@@ -46,6 +67,7 @@ def upload_file():
         return "No file uploaded", 400
     file = request.files['file']
     if file and allowed_file(file.filename):
+        ttl_mins = min(max(int(request.form.get('ttl', 1440)), 1), 43200)
         filename = secure_filename(file.filename)
         code = generate_code()
         if not code:
@@ -54,7 +76,7 @@ def upload_file():
         os.makedirs(folder, exist_ok=True)
         path = os.path.join(folder, filename)
         file.save(path)
-        data_store[code] = {'type': 'file', 'content': path, 'filename': filename}
+        data_store[code] = {'type': 'file', 'content': path, 'filename': filename, 'expires_at': time.time() + ttl_mins * 60}
         return jsonify({'code': code})
     return "Invalid file type or no file uploaded", 400
 
@@ -64,6 +86,7 @@ def upload_files():
     if not files or all(f.filename == '' for f in files):
         return jsonify({'error': 'No files uploaded'}), 400
 
+    ttl_mins = min(max(int(request.form.get('ttl', 1440)), 1), 43200)
     code = generate_code()
     if not code:
         return jsonify({'error': 'Server full'}), 503
@@ -81,22 +104,34 @@ def upload_files():
     if not saved:
         return jsonify({'error': 'No valid files uploaded'}), 400
 
-    data_store[code] = {'type': 'multi_file', 'files': saved}
+    data_store[code] = {'type': 'multi_file', 'files': saved, 'expires_at': time.time() + ttl_mins * 60}
     return jsonify({'code': code})
 
 @app.route('/get/<code>')
 def get_data(code):
     data = data_store.get(code)
-    if not data:
+    if not data or ('expires_at' in data and time.time() > data['expires_at']):
+        if data:
+            data_store.pop(code, None)
+            if data['type'] in ('file', 'multi_file'):
+                folder = os.path.join(app.config['UPLOAD_FOLDER'], code)
+                if os.path.exists(folder):
+                    shutil.rmtree(folder, ignore_errors=True)
         return redirect(url_for('index', error='invalid', code=code))
 
+    expires_at = data.get('expires_at')
+    expiry_msg = ""
+    if expires_at:
+        remaining_mins = max(1, int((expires_at - time.time()) / 60))
+        expiry_msg = f"Expires in {remaining_mins} min{'s' if remaining_mins != 1 else ''}"
+
     if data['type'] == 'text':
-        return render_template('display_text.html', text=data['content'])
+        return render_template('display_text.html', text=data['content'], expiry_msg=expiry_msg)
     elif data['type'] == 'file':
         filename = data['filename']
-        return render_template('display_file.html', filename=filename, code=code)
+        return render_template('display_file.html', filename=filename, code=code, expiry_msg=expiry_msg)
     elif data['type'] == 'multi_file':
-        return render_template('display_multi_file.html', files=data['files'], code=code)
+        return render_template('display_multi_file.html', files=data['files'], code=code, expiry_msg=expiry_msg)
 
 @app.route('/download/<code>/<filename>')
 def download_bundle_file(code, filename):

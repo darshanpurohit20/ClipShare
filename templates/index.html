@@ -277,7 +277,7 @@
       
       asteroid.style.left = startX + 'px';
       asteroid.style.animationDuration = duration + 's';
-      asteroid.style.transform = `scale(${sizeMultiplier}) rotate(45deg)`;
+      asteroid.style.setProperty('--scale', sizeMultiplier);
       
       astContainer.appendChild(asteroid);
       

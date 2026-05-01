@@ -140,9 +140,13 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedFiles.forEach((f, i) => {
       const li = document.createElement('li');
       li.innerHTML = `
-        <i class="fas fa-file" style="color:var(--text-muted);font-size:0.8rem;flex-shrink:0;"></i>
-        <span class="file-row-name">${f.name}</span>
-        <span class="file-row-size">${formatBytes(f.size)}</span>
+        <div class="file-row-icon">
+          <i class="far fa-file"></i>
+        </div>
+        <div class="file-row-info">
+          <div class="file-row-name">${f.name}</div>
+          <div class="file-row-size">${formatBytes(f.size)}</div>
+        </div>
         <button class="file-row-remove" data-idx="${i}" type="button" title="Remove">
           <i class="fas fa-xmark"></i>
         </button>`;

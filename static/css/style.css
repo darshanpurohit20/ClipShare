@@ -1271,7 +1271,7 @@ body.dark-mode .btn-close {
 /* File preview list */
 .min-file-list {
   margin: 10px 0 0;
-  padding: 0;
+  padding: 0 4px 0 0;
   max-height: 168px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -1296,14 +1296,7 @@ body.dark-mode .btn-close {
   background: var(--accent);
 }
 
-.min-file-list li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  padding: 4px 0;
-}
+
 
 /* Textarea */
 .min-textarea {
@@ -1614,18 +1607,46 @@ body.dark-mode .btn-close {
 .min-file-list li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border-radius: 8px;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
   border: 1px solid var(--border);
   background: var(--surface-2);
-  margin-bottom: 6px;
-  font-size: 0.84rem;
+  margin-bottom: 8px;
+  transition: all var(--transition);
+}
+
+.min-file-list li:hover {
+  background: var(--surface-3);
+  border-color: var(--border-2);
+}
+
+.file-row-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: var(--bg);
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.file-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+  overflow: hidden;
+  text-align: left;
 }
 
 .min-file-list .file-row-name {
-  flex: 1;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.85rem;
   color: var(--text);
   white-space: nowrap;
   overflow: hidden;
@@ -1643,15 +1664,19 @@ body.dark-mode .btn-close {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-size: 13px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 14px;
   line-height: 1;
-  transition: color var(--transition);
+  transition: all var(--transition);
 }
 
 .min-file-list .file-row-remove:hover {
   color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
 }
 
 /* ── QR Modal ── */
@@ -1939,11 +1964,11 @@ body:not(.dark-mode) .asteroid {
 
 @keyframes meteorFall {
   0% {
-    transform: translate(0, -50px) rotate(45deg);
+    transform: translate(0, -50px) rotate(45deg) scale(var(--scale, 1));
     opacity: 1;
   }
   100% {
-    transform: translate(-1000px, 1000px) rotate(45deg);
+    transform: translate(-1500px, 1500px) rotate(45deg) scale(var(--scale, 1));
     opacity: 0;
   }
 }

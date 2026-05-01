@@ -353,7 +353,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // inline banner
     const banner = document.getElementById('resultBanner');
-    if (banner) banner.style.display = 'flex';
+    if (banner) {
+      banner.style.display = 'flex';
+      banner.querySelector('span').innerHTML = '<i class="fas fa-circle-check" style="color:#4ade80;margin-right:6px;"></i> Files uploaded!';
+    }
 
     // inline code block
     const codeBlock = document.getElementById('codeBlock');

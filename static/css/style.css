@@ -1902,12 +1902,12 @@ body.dark-mode .btn-close {
   transform: translate(-50%, -50%);
   transition: left 0.08s ease, top 0.08s ease;
   z-index: 0;
-  opacity: 0;
+  opacity: 1;
   will-change: left, top;
 }
 
-body.dark-mode #cursor-glow {
-  opacity: 1;
+body:not(.dark-mode) #cursor-glow {
+  background: radial-gradient(circle, rgba(91, 82, 232, 0.25) 0%, transparent 70%);
 }
 
 /* ── Utilities ── */

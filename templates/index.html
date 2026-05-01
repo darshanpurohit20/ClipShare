@@ -262,6 +262,29 @@
       requestAnimationFrame(animGlow);
     })();
 
+    // ── Asteroid Background Animation ──
+    const astContainer = document.createElement('div');
+    astContainer.id = 'asteroids-container';
+    document.body.insertBefore(astContainer, document.body.firstChild);
+
+    function createAsteroid() {
+      const asteroid = document.createElement('div');
+      asteroid.classList.add('asteroid');
+      
+      const startX = Math.random() * (window.innerWidth + window.innerHeight);
+      const duration = Math.random() * 3 + 2;
+      const sizeMultiplier = Math.random() * 1.5 + 0.5;
+      
+      asteroid.style.left = startX + 'px';
+      asteroid.style.animationDuration = duration + 's';
+      asteroid.style.transform = `scale(${sizeMultiplier}) rotate(45deg)`;
+      
+      astContainer.appendChild(asteroid);
+      
+      setTimeout(() => { asteroid.remove(); }, duration * 1000);
+    }
+    setInterval(createAsteroid, 500);
+
     // ── Magnetic buttons (corner + min-tab) ──
     document.querySelectorAll('.corner-btn, .min-tab').forEach(btn => {
       let raf = 0;

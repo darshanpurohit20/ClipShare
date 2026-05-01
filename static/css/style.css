@@ -1911,6 +1911,43 @@ body:not(.dark-mode) #cursor-glow {
 }
 
 /* ── Utilities ── */
+/* ── Asteroid Background Animation ── */
+#asteroids-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.asteroid {
+  position: absolute;
+  width: 2px;
+  height: 60px;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(124, 111, 255, 0.8));
+  border-radius: 50%;
+  animation: meteorFall linear forwards;
+  opacity: 0;
+}
+
+body:not(.dark-mode) .asteroid {
+  background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(91, 82, 232, 0.5));
+}
+
+@keyframes meteorFall {
+  0% {
+    transform: translate(0, -50px) rotate(45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-1000px, 1000px) rotate(45deg);
+    opacity: 0;
+  }
+}
+
 .z1 {
   position: relative;
   z-index: 1;

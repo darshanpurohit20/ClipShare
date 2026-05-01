@@ -120,7 +120,7 @@
       </div>
 
       <!-- Payload panel -->
-      <div class="panel-card fade-in fade-in-delay-1" style="padding:0;overflow:visible;">
+      <div class="panel-card fade-in fade-in-delay-1" style="padding:0;overflow:hidden;">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface-2);">
           <span class="payload-label"><i class="fas fa-layer-group me-1"></i> Payload Summary</span>
           <span class="payload-count">{{ files|length }} file{{ 's' if files|length != 1 }}</span>
@@ -171,7 +171,6 @@
         </div>
       </div>
 
-      <!-- Back link -->
       <div class="fade-in fade-in-delay-2" style="text-align:center;margin-top:24px;">
         <a href="/" class="action-bar-ghost" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;">
           <i class="fas fa-plus"></i> New Transfer

@@ -205,7 +205,7 @@ def generate_qr(code):
     try:
         # Fetch the monster avatar
         avatar_url = f"https://robohash.org/{code}.png?set=set2&size=100x100"
-        response = requests.get(avatar_url, timeout=0.5)
+        response = requests.get(avatar_url, timeout=2.0)
         response.raise_for_status()
         
         logo = Image.open(io.BytesIO(response.content)).convert("RGBA")

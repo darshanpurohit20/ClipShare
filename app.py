@@ -109,7 +109,10 @@ def upload_files():
     if not saved:
         return jsonify({'error': 'No valid files uploaded'}), 400
 
-    data_store[code] = {'type': 'multi_file', 'files': saved, 'expires_at': time.time() + ttl_mins * 60}
+    if len(saved) == 1:
+        data_store[code] = {'type': 'file', 'content': saved[0]['path'], 'filename': saved[0]['filename'], 'expires_at': time.time() + ttl_mins * 60}
+    else:
+        data_store[code] = {'type': 'multi_file', 'files': saved, 'expires_at': time.time() + ttl_mins * 60}
     return jsonify({'code': code})
 
 @app.route('/get/<code>')

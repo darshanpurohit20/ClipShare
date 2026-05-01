@@ -1,55 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ClipShare — File Bundle</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="icon" type="image/png" href="/static/images/logow.png" />
   <style>
     .file-icon-wrap {
-      width: 44px; height: 44px;
+      width: 44px;
+      height: 44px;
       border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.2rem;
     }
-    .icon-pdf  { background:rgba(224,32,32,0.15);   color:#f87171; }
-    .icon-doc  { background:rgba(26,86,219,0.15);   color:#60a5fa; }
-    .icon-xls  { background:rgba(13,159,94,0.15);   color:#34d399; }
-    .icon-ppt  { background:rgba(217,119,6,0.15);   color:#fbbf24; }
-    .icon-img  { background:rgba(124,58,237,0.15);  color:#a78bfa; }
-    .icon-vid  { background:rgba(219,39,119,0.15);  color:#f472b6; }
-    .icon-zip  { background:rgba(180,83,9,0.15);    color:#fcd34d; }
-    .icon-code { background:rgba(5,150,105,0.15);   color:#6ee7b7; }
-    .icon-txt  { background:rgba(2,132,199,0.15);   color:#38bdf8; }
-    .icon-audio{ background:rgba(147,51,234,0.15);  color:#d8b4fe; }
-    .icon-file { background:rgba(100,116,139,0.15); color:#94a3b8; }
 
-    body:not(.dark-mode) .icon-pdf  { background:#fde8e8; color:#e02020; }
-    body:not(.dark-mode) .icon-doc  { background:#ddeaff; color:#1a56db; }
-    body:not(.dark-mode) .icon-xls  { background:#d8f5e5; color:#0d9f5e; }
-    body:not(.dark-mode) .icon-ppt  { background:#feefd8; color:#d97706; }
-    body:not(.dark-mode) .icon-img  { background:#ede9fe; color:#7c3aed; }
-    body:not(.dark-mode) .icon-vid  { background:#fce7f3; color:#db2777; }
-    body:not(.dark-mode) .icon-zip  { background:#fef3c7; color:#b45309; }
-    body:not(.dark-mode) .icon-code { background:#d1fae5; color:#059669; }
-    body:not(.dark-mode) .icon-txt  { background:#e0f2fe; color:#0284c7; }
-    body:not(.dark-mode) .icon-audio{ background:#fdf4ff; color:#9333ea; }
-    body:not(.dark-mode) .icon-file { background:#f1f5f9; color:#64748b; }
+    .icon-pdf {
+      background: rgba(224, 32, 32, 0.15);
+      color: #f87171;
+    }
 
-    .file-name { flex:1; font-size:0.88rem; font-weight:500; word-break:break-all; }
+    .icon-doc {
+      background: rgba(26, 86, 219, 0.15);
+      color: #60a5fa;
+    }
+
+    .icon-xls {
+      background: rgba(13, 159, 94, 0.15);
+      color: #34d399;
+    }
+
+    .icon-ppt {
+      background: rgba(217, 119, 6, 0.15);
+      color: #fbbf24;
+    }
+
+    .icon-img {
+      background: rgba(124, 58, 237, 0.15);
+      color: #a78bfa;
+    }
+
+    .icon-vid {
+      background: rgba(219, 39, 119, 0.15);
+      color: #f472b6;
+    }
+
+    .icon-zip {
+      background: rgba(180, 83, 9, 0.15);
+      color: #fcd34d;
+    }
+
+    .icon-code {
+      background: rgba(5, 150, 105, 0.15);
+      color: #6ee7b7;
+    }
+
+    .icon-txt {
+      background: rgba(2, 132, 199, 0.15);
+      color: #38bdf8;
+    }
+
+    .icon-audio {
+      background: rgba(147, 51, 234, 0.15);
+      color: #d8b4fe;
+    }
+
+    .icon-file {
+      background: rgba(100, 116, 139, 0.15);
+      color: #94a3b8;
+    }
+
+    body:not(.dark-mode) .icon-pdf {
+      background: #fde8e8;
+      color: #e02020;
+    }
+
+    body:not(.dark-mode) .icon-doc {
+      background: #ddeaff;
+      color: #1a56db;
+    }
+
+    body:not(.dark-mode) .icon-xls {
+      background: #d8f5e5;
+      color: #0d9f5e;
+    }
+
+    body:not(.dark-mode) .icon-ppt {
+      background: #feefd8;
+      color: #d97706;
+    }
+
+    body:not(.dark-mode) .icon-img {
+      background: #ede9fe;
+      color: #7c3aed;
+    }
+
+    body:not(.dark-mode) .icon-vid {
+      background: #fce7f3;
+      color: #db2777;
+    }
+
+    body:not(.dark-mode) .icon-zip {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    body:not(.dark-mode) .icon-code {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    body:not(.dark-mode) .icon-txt {
+      background: #e0f2fe;
+      color: #0284c7;
+    }
+
+    body:not(.dark-mode) .icon-audio {
+      background: #fdf4ff;
+      color: #9333ea;
+    }
+
+    body:not(.dark-mode) .icon-file {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .file-name {
+      flex: 1;
+      font-size: 0.88rem;
+      font-weight: 500;
+      word-break: break-all;
+    }
 
     .dl-btn {
-      display:inline-flex; align-items:center; gap:6px;
-      padding:7px 14px; border-radius:8px;
-      font-size:0.8rem; font-weight:600;
-      background:transparent;
-      border:1.5px solid var(--border-2);
-      color:var(--text); text-decoration:none; white-space:nowrap;
-      transition:all var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: transparent;
+      border: 1.5px solid var(--border-2);
+      color: var(--text);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all var(--transition);
     }
+
     .dl-btn:hover {
       background: var(--accent);
       border-color: var(--accent);
@@ -57,35 +161,69 @@
     }
 
     .zip-btn {
-      display:inline-flex; align-items:center; gap:8px;
-      padding:12px 28px; border-radius:50px;
-      font-weight:700; font-size:0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
       background: linear-gradient(135deg, var(--accent), #9b8aff);
-      color:#fff; border:none; text-decoration:none;
-      transition:all var(--transition);
-      box-shadow:0 6px 24px var(--accent-glow);
+      color: #fff;
+      border: none;
+      text-decoration: none;
+      transition: all var(--transition);
+      box-shadow: 0 6px 24px var(--accent-glow);
     }
-    .zip-btn:hover { transform:translateY(-2px); box-shadow:0 10px 30px var(--accent-glow); color:#fff; }
+
+    .zip-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px var(--accent-glow);
+      color: #fff;
+    }
 
     .bundle-header {
-      display:flex; align-items:center; justify-content:space-between;
-      flex-wrap:wrap; gap:14px; margin-bottom:20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
     }
 
     .payload-label {
-      font-size:0.7rem; font-weight:600; letter-spacing:0.1em;
-      text-transform:uppercase; color:var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
     }
 
     .payload-count {
-      font-size:0.82rem; font-weight:600; color:var(--accent-2);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent-2);
     }
-    .file-scroll::-webkit-scrollbar { width: 4px; }
-    .file-scroll::-webkit-scrollbar-track { background: transparent; }
-    .file-scroll::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
-    .file-scroll::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    .file-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .file-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .file-scroll::-webkit-scrollbar-thumb {
+      background: var(--surface-3);
+      border-radius: 4px;
+    }
+
+    .file-scroll::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
   </style>
 </head>
+
 <body class="dark-mode">
 
   <a href="/" class="corner-btn corner-info" title="Home" style="text-decoration:none;">
@@ -107,8 +245,10 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p><strong>ClipShare</strong> is a lightweight, anonymous file &amp; text sharing app. Upload anything, get a 4-digit code and QR — share instantly, no login required.</p>
-          <p style="margin:0;">Built by <a href="https://github.com/darshanpurohit20" target="_blank">Darshan Purohit</a></p>
+          <p><strong>ClipShare</strong> is a lightweight, anonymous file &amp; text sharing app. Upload anything, get a
+            4-digit code and QR code share instantly, no login required.</p>
+          <p style="margin:0;">Built by <a href="https://github.com/darshanpurohit20" target="_blank">Darshan
+              Purohit</a></p>
         </div>
       </div>
     </div>
@@ -129,9 +269,11 @@
         <div class="success-badge" style="margin-bottom:10px;">
           <i class="fas fa-circle-check"></i> Transfer Complete
         </div>
-        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:0 0 18px;">File Bundle</h2>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:0 0 18px;">File Bundle
+        </h2>
         {% if expiry_msg %}
-        <div style="font-size:0.75rem;color:#f87171;margin-top:4px;"><i class="fas fa-clock me-1"></i>{{ expiry_msg }}</div>
+        <div style="font-size:0.75rem;color:#f87171;margin-top:4px;"><i class="fas fa-clock me-1"></i>{{ expiry_msg }}
+        </div>
         {% endif %}
         <a href="/download_zip/{{ code }}" class="zip-btn">
           <i class="fas fa-file-zipper"></i> Download All as ZIP
@@ -140,58 +282,61 @@
 
       <!-- Payload panel -->
       <div class="panel-card fade-in fade-in-delay-1" style="padding:0;overflow:hidden;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface-2);">
+        <div
+          style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface-2);">
           <span class="payload-label"><i class="fas fa-layer-group me-1"></i> Payload Summary</span>
           <span class="payload-count">{{ files|length }} file{{ 's' if files|length != 1 }}</span>
         </div>
 
-        <div class="file-scroll" style="padding:12px 14px;max-height:360px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--surface-3) transparent;">
+        <div class="file-scroll"
+          style="padding:12px 14px;max-height:360px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--surface-3) transparent;">
           {% for file in files %}
-            {% if '.' in file.filename %}
-              {% set ext = file.filename.rsplit('.', 1)[1] | lower %}
-            {% else %}
-              {% set ext = '' %}
-            {% endif %}
+          {% if '.' in file.filename %}
+          {% set ext = file.filename.rsplit('.', 1)[1] | lower %}
+          {% else %}
+          {% set ext = '' %}
+          {% endif %}
 
-            {% set ns = namespace(cls='icon-file', fa='fa-file') %}
-            {% if ext == 'pdf' %}
-              {% set ns.cls = 'icon-pdf' %}{% set ns.fa = 'fa-file-lines' %}
-            {% elif ext in ['doc', 'docx'] %}
-              {% set ns.cls = 'icon-doc' %}{% set ns.fa = 'fa-file-word' %}
-            {% elif ext in ['xls', 'xlsx', 'csv'] %}
-              {% set ns.cls = 'icon-xls' %}{% set ns.fa = 'fa-file-excel' %}
-            {% elif ext in ['ppt', 'pptx'] %}
-              {% set ns.cls = 'icon-ppt' %}{% set ns.fa = 'fa-file-powerpoint' %}
-            {% elif ext in ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp', 'ico'] %}
-              {% set ns.cls = 'icon-img' %}{% set ns.fa = 'fa-file-image' %}
-            {% elif ext in ['mp4', 'mov', 'avi', 'mkv', 'webm'] %}
-              {% set ns.cls = 'icon-vid' %}{% set ns.fa = 'fa-file-video' %}
-            {% elif ext in ['zip', 'rar', 'gz', 'tar', '7z'] %}
-              {% set ns.cls = 'icon-zip' %}{% set ns.fa = 'fa-file-zipper' %}
-            {% elif ext in ['mp3', 'wav', 'flac', 'ogg', 'm4a'] %}
-              {% set ns.cls = 'icon-audio' %}{% set ns.fa = 'fa-file-audio' %}
-            {% elif ext in ['js', 'ts', 'py', 'html', 'css', 'json', 'xml', 'sh', 'java', 'cpp', 'c', 'go', 'rb', 'php'] %}
-              {% set ns.cls = 'icon-code' %}{% set ns.fa = 'fa-file-code' %}
-            {% elif ext in ['txt', 'md', 'log', 'rtf'] %}
-              {% set ns.cls = 'icon-txt' %}{% set ns.fa = 'fa-file-lines' %}
-            {% endif %}
+          {% set ns = namespace(cls='icon-file', fa='fa-file') %}
+          {% if ext == 'pdf' %}
+          {% set ns.cls = 'icon-pdf' %}{% set ns.fa = 'fa-file-lines' %}
+          {% elif ext in ['doc', 'docx'] %}
+          {% set ns.cls = 'icon-doc' %}{% set ns.fa = 'fa-file-word' %}
+          {% elif ext in ['xls', 'xlsx', 'csv'] %}
+          {% set ns.cls = 'icon-xls' %}{% set ns.fa = 'fa-file-excel' %}
+          {% elif ext in ['ppt', 'pptx'] %}
+          {% set ns.cls = 'icon-ppt' %}{% set ns.fa = 'fa-file-powerpoint' %}
+          {% elif ext in ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp', 'ico'] %}
+          {% set ns.cls = 'icon-img' %}{% set ns.fa = 'fa-file-image' %}
+          {% elif ext in ['mp4', 'mov', 'avi', 'mkv', 'webm'] %}
+          {% set ns.cls = 'icon-vid' %}{% set ns.fa = 'fa-file-video' %}
+          {% elif ext in ['zip', 'rar', 'gz', 'tar', '7z'] %}
+          {% set ns.cls = 'icon-zip' %}{% set ns.fa = 'fa-file-zipper' %}
+          {% elif ext in ['mp3', 'wav', 'flac', 'ogg', 'm4a'] %}
+          {% set ns.cls = 'icon-audio' %}{% set ns.fa = 'fa-file-audio' %}
+          {% elif ext in ['js', 'ts', 'py', 'html', 'css', 'json', 'xml', 'sh', 'java', 'cpp', 'c', 'go', 'rb', 'php']
+          %}
+          {% set ns.cls = 'icon-code' %}{% set ns.fa = 'fa-file-code' %}
+          {% elif ext in ['txt', 'md', 'log', 'rtf'] %}
+          {% set ns.cls = 'icon-txt' %}{% set ns.fa = 'fa-file-lines' %}
+          {% endif %}
 
-            <div class="file-card">
-              <div class="file-icon-wrap {{ ns.cls }}">
-                <i class="fas {{ ns.fa }}"></i>
-              </div>
-              <div class="file-name">{{ file.filename }}</div>
-              <a href="{{ url_for('download_bundle_file', code=code, filename=file.filename) }}"
-                 class="dl-btn" download>
-                <i class="fas fa-download"></i> Download
-              </a>
+          <div class="file-card">
+            <div class="file-icon-wrap {{ ns.cls }}">
+              <i class="fas {{ ns.fa }}"></i>
             </div>
+            <div class="file-name">{{ file.filename }}</div>
+            <a href="{{ url_for('download_bundle_file', code=code, filename=file.filename) }}" class="dl-btn" download>
+              <i class="fas fa-download"></i> Download
+            </a>
+          </div>
           {% endfor %}
         </div>
       </div>
 
       <div class="fade-in fade-in-delay-2" style="text-align:center;margin-top:24px;">
-        <a href="/" class="action-bar-ghost" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;">
+        <a href="/" class="action-bar-ghost"
+          style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;">
           <i class="fas fa-plus"></i> New Transfer
         </a>
       </div>
@@ -205,10 +350,10 @@
     document.addEventListener("DOMContentLoaded", () => {
       const toggleBtn = document.getElementById('theme-toggle');
       const themeIcon = document.getElementById('theme-icon');
-      const logo      = document.getElementById('clipshare-logo');
+      const logo = document.getElementById('clipshare-logo');
 
       (function applyTheme() {
-        const saved  = localStorage.getItem('theme');
+        const saved = localStorage.getItem('theme');
         const isDark = saved === null ? true : saved === 'dark';
         document.body.classList.toggle('dark-mode', isDark);
         if (themeIcon) themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
@@ -227,4 +372,5 @@
     });
   </script>
 </body>
+
 </html>

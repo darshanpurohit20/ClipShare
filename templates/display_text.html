@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ClipShare — Shared Text</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="icon" type="image/png" href="/static/images/logow.png" />
 </head>
+
 <body class="dark-mode">
 
   <a href="/" class="corner-btn corner-info" title="Home" style="text-decoration:none;">
@@ -30,8 +32,10 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p><strong>ClipShare</strong> is a lightweight, anonymous file &amp; text sharing app. Upload anything, get a 4-digit code and QR — share instantly, no login required.</p>
-          <p style="margin:0;">Built by <a href="https://github.com/darshanpurohit20" target="_blank">Darshan Purohit</a></p>
+          <p><strong>ClipShare</strong> is a lightweight, anonymous file &amp; text sharing app. Upload anything, get a
+            4-digit code and QR code share instantly, no login required.</p>
+          <p style="margin:0;">Built by <a href="https://github.com/darshanpurohit20" target="_blank">Darshan
+              Purohit</a></p>
         </div>
       </div>
     </div>
@@ -48,29 +52,34 @@
     <div style="width:100%;max-width:640px;">
 
       <!-- Header row -->
-      <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+      <div class="fade-in"
+        style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
         <div>
           <div class="success-badge" style="margin-bottom:8px;">
             <i class="fas fa-file-lines"></i> Text Clip
           </div>
           <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin:0;">Shared Text</h2>
           {% if expiry_msg %}
-          <div style="font-size:0.75rem;color:#f87171;margin-top:4px;"><i class="fas fa-clock me-1"></i>{{ expiry_msg }}</div>
+          <div style="font-size:0.75rem;color:#f87171;margin-top:4px;"><i class="fas fa-clock me-1"></i>{{ expiry_msg }}
+          </div>
           {% endif %}
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <button id="copyTextBtn" class="btn-action-primary">
             <i class="fas fa-copy"></i> Copy Text
           </button>
-          <span id="copyTextMsg" class="d-none" style="font-size:0.78rem;font-weight:600;color:var(--accent-2);background:rgba(168,255,87,0.12);border-radius:50px;padding:4px 12px;">Copied!</span>
+          <span id="copyTextMsg" class="d-none"
+            style="font-size:0.78rem;font-weight:600;color:var(--accent-2);background:rgba(168,255,87,0.12);border-radius:50px;padding:4px 12px;">Copied!</span>
         </div>
       </div>
 
       <!-- Text card -->
       <div class="panel-card fade-in fade-in-delay-1" style="padding:0;overflow:hidden;">
         <!-- Toolbar -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);">
-          <span style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;color:var(--text-muted);">
+        <div
+          style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);">
+          <span
+            style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;color:var(--text-muted);">
             <i class="fas fa-terminal me-1"></i> Content
           </span>
           <span style="font-size:0.7rem;color:var(--text-muted);">plain text</span>
@@ -80,7 +89,8 @@
 
       <!-- Back link -->
       <div class="fade-in fade-in-delay-2" style="text-align:center;margin-top:28px;">
-        <a href="/" class="action-bar-ghost" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;">
+        <a href="/" class="action-bar-ghost"
+          style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;">
           <i class="fas fa-plus"></i> New Transfer
         </a>
       </div>
@@ -94,10 +104,10 @@
     document.addEventListener("DOMContentLoaded", () => {
       const toggleBtn = document.getElementById('theme-toggle');
       const themeIcon = document.getElementById('theme-icon');
-      const logo      = document.getElementById('clipshare-logo');
+      const logo = document.getElementById('clipshare-logo');
 
       (function applyTheme() {
-        const saved  = localStorage.getItem('theme');
+        const saved = localStorage.getItem('theme');
         const isDark = saved === null ? true : saved === 'dark';
         document.body.classList.toggle('dark-mode', isDark);
         if (themeIcon) themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
@@ -114,8 +124,8 @@
         });
       }
 
-      const copyBtn    = document.getElementById("copyTextBtn");
-      const copyMsg    = document.getElementById("copyTextMsg");
+      const copyBtn = document.getElementById("copyTextBtn");
+      const copyMsg = document.getElementById("copyTextMsg");
       const sharedText = document.getElementById("sharedText");
 
       if (copyBtn) {
@@ -138,7 +148,7 @@
             tmp.value = t;
             document.body.appendChild(tmp);
             tmp.select();
-            try { document.execCommand('copy'); flash(); } catch (_) {}
+            try { document.execCommand('copy'); flash(); } catch (_) { }
             document.body.removeChild(tmp);
           }
         });
@@ -146,4 +156,5 @@
     });
   </script>
 </body>
+
 </html>

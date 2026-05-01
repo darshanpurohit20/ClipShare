@@ -217,6 +217,67 @@ document.addEventListener('DOMContentLoaded', () => {
   bindTtlCustom('fileTtl', 'fileCustomTtlWrap', 'fileCustomTtl');
   bindTtlCustom('textTtl', 'textCustomTtlWrap', 'textCustomTtl');
 
+  // ── Paste-to-Upload (Ctrl+V / Cmd+V) ──
+  document.addEventListener('paste', async (e) => {
+    // Only act on the home page Send panel, skip if user is typing in an input/textarea
+    const tag = document.activeElement?.tagName?.toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+    if (!document.getElementById('sendBox') || document.getElementById('sendBox').classList.contains('d-none')) return;
+
+    const clipboardData = e.clipboardData;
+    if (!clipboardData) return;
+
+    // Check for pasted files first (images, copied files, screenshots)
+    if (clipboardData.files && clipboardData.files.length > 0) {
+      e.preventDefault();
+      const formData = new FormData();
+      [...clipboardData.files].forEach(f => {
+        // Give unnamed blobs a sensible filename
+        const name = f.name || `paste_${Date.now()}.${f.type.split('/')[1] || 'bin'}`;
+        formData.append('files', f, name);
+      });
+      let ttl = document.querySelector('input[name="fileTtl"]:checked')?.value || '1440';
+      if (ttl === 'custom') ttl = document.getElementById('fileCustomTtl')?.value || '1440';
+      formData.append('ttl', ttl);
+
+      // Show uploading state
+      const banner = document.getElementById('resultBanner');
+      if (banner) { banner.style.display = 'flex'; banner.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin" style="color:#7c6fff;margin-right:6px;"></i> Uploading pasted file…'; }
+
+      try {
+        const res = await fetch('/upload_files', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.code) showResult(data.code);
+        else alert(data.error || 'Upload failed.');
+      } catch (err) { alert('Paste upload failed.'); }
+      return;
+    }
+
+    // Check for pasted text
+    const pastedText = clipboardData.getData('text/plain');
+    if (pastedText && pastedText.trim()) {
+      e.preventDefault();
+      let ttl = document.querySelector('input[name="textTtl"]:checked')?.value || '1440';
+      if (ttl === 'custom') ttl = document.getElementById('textCustomTtl')?.value || '1440';
+
+      // Show uploading state
+      const banner = document.getElementById('resultBanner');
+      if (banner) { banner.style.display = 'flex'; banner.querySelector('span').innerHTML = '<i class="fas fa-spinner fa-spin" style="color:#7c6fff;margin-right:6px;"></i> Uploading pasted text…'; }
+
+      try {
+        const res = await fetch('/upload_text', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `text=${encodeURIComponent(pastedText.trim())}&ttl=${encodeURIComponent(ttl)}`
+        });
+        const data = await res.json();
+        if (data.code) showResult(data.code);
+        else alert(data.error || 'Upload failed.');
+      } catch (err) { alert('Paste upload failed.'); }
+      return;
+    }
+  });
+
   // ── File upload ──
   if (fileForm) {
     fileForm.onsubmit = async function (e) {

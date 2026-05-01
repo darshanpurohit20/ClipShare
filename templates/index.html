@@ -255,14 +255,34 @@
     })();
 
     // ── Magnetic buttons (corner + min-tab) ──
-    document.querySelectorAll('.corner-btn, .min-tab, .min-btn-solid, .min-btn-ghost').forEach(btn => {
-      btn.addEventListener('mousemove', e => {
+    document.querySelectorAll('.corner-btn, .min-tab').forEach(btn => {
+      let raf = 0;
+      let lx = 0, ly = 0;
+      let cx = 0, cy = 0;
+
+      function recalcCenter() {
         const r = btn.getBoundingClientRect();
-        const dx = e.clientX - (r.left + r.width  / 2);
-        const dy = e.clientY - (r.top  + r.height / 2);
-        btn.style.transform = `translate(${dx * 0.18}px, ${dy * 0.18}px)`;
-      });
+        cx = r.left + r.width / 2;
+        cy = r.top + r.height / 2;
+      }
+
+      btn.addEventListener('mouseenter', recalcCenter);
+
+      btn.addEventListener('mousemove', e => {
+        lx = e.clientX;
+        ly = e.clientY;
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          const dx = lx - cx;
+          const dy = ly - cy;
+          btn.style.transform = `translate3d(${(dx * 0.14).toFixed(2)}px, ${(dy * 0.14).toFixed(2)}px, 0)`;
+        });
+      }, { passive: true });
+
       btn.addEventListener('mouseleave', () => {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
         btn.style.transform = '';
       });
     });

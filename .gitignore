@@ -1,2 +1,11 @@
 venv/
 uploads/
+
+venv/
+uploads/
+readmeimg/
+
+__pycache__/
+*.pyc
+.env
+.DS_Store

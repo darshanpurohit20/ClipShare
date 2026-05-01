@@ -91,9 +91,28 @@
   <a href="/" class="corner-btn corner-info" title="Home" style="text-decoration:none;">
     <i class="fas fa-house"></i>
   </a>
+  <button class="corner-btn corner-about" data-bs-toggle="modal" data-bs-target="#infoModal" title="About">
+    <i class="fas fa-circle-info"></i>
+  </button>
   <button class="corner-btn corner-theme" id="theme-toggle" title="Toggle theme">
     <i id="theme-icon" class="fas fa-moon"></i>
   </button>
+
+  <!-- ── About Modal ── -->
+  <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoModalLabel">About ClipShare</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>ClipShare</strong> is a lightweight, anonymous file &amp; text sharing app. Upload anything, get a 4-digit code and QR — share instantly, no login required.</p>
+          <p style="margin:0;">Built by <a href="https://github.com/darshanpurohit20" target="_blank">Darshan Purohit</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ── Content ── -->
   <div class="min-page" style="padding-top:48px;padding-bottom:48px;align-items:center;">

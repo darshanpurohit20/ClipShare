@@ -1789,6 +1789,11 @@ body.dark-mode .btn-close {
   left: 16px;
 }
 
+.corner-about {
+  top: 16px;
+  right: 16px;
+}
+
 .corner-theme {
   bottom: 16px;
   right: 16px;

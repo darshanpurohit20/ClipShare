@@ -24,14 +24,14 @@
 }
 
 body:not(.dark-mode) {
-  --bg: #f4f4f8;
+  --bg: #fcfaf8;
   --surface: #ffffff;
-  --surface-2: #f0f0f6;
-  --surface-3: #e8e8f2;
-  --border: rgba(0, 0, 0, 0.07);
-  --border-2: rgba(0, 0, 0, 0.13);
-  --text: #111118;
-  --text-muted: #888899;
+  --surface-2: #f5f1eb;
+  --surface-3: #eae3d9;
+  --border: rgba(60, 50, 40, 0.08);
+  --border-2: rgba(60, 50, 40, 0.14);
+  --text: #2d2a27;
+  --text-muted: #8c857e;
   --accent: #5b52e8;
   --accent-2: #3a8f00;
   --accent-glow: rgba(91, 82, 232, 0.20);

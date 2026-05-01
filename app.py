@@ -50,6 +50,29 @@ def cleanup_expired_data():
 
 threading.Thread(target=cleanup_expired_data, daemon=True).start()
 
+def keep_awake():
+    while True:
+        time.sleep(600)  # 10 minutes (Render sleeps after 15 min of inactivity)
+        try:
+            space_host = os.environ.get('SPACE_HOST')
+            render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+            if space_host:
+                url = f"https://{space_host}/health"
+            elif render_host:
+                url = f"https://{render_host}/health"
+            else:
+                url = "http://127.0.0.1:5000/health"
+            requests.get(url, timeout=10)
+        except Exception as e:
+            print(f"Health ping failed: {e}")
+
+threading.Thread(target=keep_awake, daemon=True).start()
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "ok", "timestamp": time.time()})
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -182,7 +205,7 @@ def generate_qr(code):
     try:
         # Fetch the monster avatar
         avatar_url = f"https://robohash.org/{code}.png?set=set2&size=100x100"
-        response = requests.get(avatar_url, timeout=2.0)
+        response = requests.get(avatar_url, timeout=0.5)
         response.raise_for_status()
         
         logo = Image.open(io.BytesIO(response.content)).convert("RGBA")

@@ -2079,3 +2079,37 @@ body:not(.dark-mode) .asteroid {
   color: #fff;
   box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
 }
+
+/* ── Editor Text Box UI ── */
+.editor-inner-box {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 24px 32px;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.editor-inner-box:hover {
+  border-color: rgba(255,255,255,0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 0 10px rgba(255,255,255,0.02);
+  background: rgba(0,0,0,0.25);
+}
+
+.editor-text-content {
+  margin: 0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+  font-size: 0.95rem;
+  color: #d4d4d4;
+  white-space: pre;
+  word-wrap: normal;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  tab-size: 4;
+}
+
+@media (max-width: 576px) {
+  .editor-inner-box {
+    padding: 16px 20px;
+  }
+}

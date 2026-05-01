@@ -74,17 +74,31 @@
       </div>
 
       <!-- Text card -->
-      <div class="panel-card fade-in fade-in-delay-1" style="padding:0;overflow:hidden;">
-        <!-- Toolbar -->
-        <div
-          style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface-2);">
-          <span
-            style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;color:var(--text-muted);">
-            <i class="fas fa-terminal me-1"></i> Content
+      <div class="fade-in fade-in-delay-1" style="border-radius:12px; overflow:hidden; background:#1e1e1e; border:1px solid rgba(255,255,255,0.1); box-shadow:0 16px 40px rgba(0,0,0,0.3); text-align:left; margin-top:24px;">
+        <!-- VS Code / Mac Toolbar -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#252526; border-bottom:1px solid #333; position:relative;">
+          <!-- Traffic lights -->
+          <div style="display:flex; gap:8px;">
+            <div style="width:12px; height:12px; border-radius:50%; background:#ff5f56;"></div>
+            <div style="width:12px; height:12px; border-radius:50%; background:#ffbd2e;"></div>
+            <div style="width:12px; height:12px; border-radius:50%; background:#27c93f;"></div>
+          </div>
+          
+          <!-- File tab -->
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 0.8rem; color: #969696; position: absolute; left: 50%; transform: translateX(-50%); display:flex; align-items:center; gap:6px;">
+            <i class="fas fa-file-code"></i> snippet.txt
+          </div>
+          
+          <!-- Language indicator -->
+          <span style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.75rem; color: #6e7681; display:flex; align-items:center; gap:4px;">
+            <i class="fas fa-terminal"></i> Terminal
           </span>
-          <span style="font-size:0.7rem;color:var(--text-muted);">plain text</span>
         </div>
-        <pre id="sharedText" class="p-4 text-start mb-0" style="white-space:pre-wrap;overflow-x:auto;">{{ text }}</pre>
+
+        <!-- Editor body -->
+        <div style="background:#1e1e1e; padding:24px 32px; max-height:500px; overflow:auto;">
+          <pre id="sharedText" class="editor-text-content">{{ text }}</pre>
+        </div>
       </div>
 
       <!-- Back link -->

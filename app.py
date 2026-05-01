@@ -19,10 +19,8 @@ UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 1024  # 16 MB limit modified to 1 gb
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'docx', 'doc', 'xlsx', 'xls', 'csv', 'zip', 'rar', 'mp4', 'mp3'}
-
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return bool(filename)
 
 # ── Thread-safe data store ──
 data_store = {}

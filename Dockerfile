@@ -34,4 +34,4 @@ EXPOSE 7860
 # Alternatively, if you prefer using Flask's built-in server as configured in app.py:
 # CMD ["python", "app.py"]
 # But for Hugging Face Spaces, it's safer to ensure it hits the PORT env var correctly.
-CMD ["python", "app.py"]
+CMD ["gunicorn", "app:app", "--workers", "1", "--threads", "8", "--bind", "0.0.0.0:7860", "--timeout", "120", "--access-logfile", "-"]

@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, send_from_directory, render_template, jsonify, send_file
+from flask import Flask, request, redirect, url_for, send_from_directory, render_template, jsonify, send_file, make_response
 import zipfile
 import os
 import qrcode
@@ -24,7 +24,12 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'docx', 'doc', 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# ── Thread-safe data store ──
 data_store = {}
+data_store_lock = threading.Lock()
+
+# ── QR code cache (code → PNG bytes) ──
+qr_cache = {}
 
 def generate_code():
     attempts = 0
@@ -39,16 +44,27 @@ def cleanup_expired_data():
     while True:
         time.sleep(60)
         current_time = time.time()
-        expired_codes = [code for code, data in data_store.items() if 'expires_at' in data and current_time > data['expires_at']]
-        
+
+        # Snapshot expired codes under lock
+        with data_store_lock:
+            expired_codes = [code for code, data in data_store.items()
+                           if 'expires_at' in data and current_time > data['expires_at']]
+
+        # Remove each expired entry (lock per-item to minimize hold time)
         for code in expired_codes:
-            data = data_store.pop(code, None)
+            with data_store_lock:
+                data = data_store.pop(code, None)
             if data and data['type'] in ('file', 'multi_file'):
                 folder = os.path.join(app.config['UPLOAD_FOLDER'], code)
                 if os.path.exists(folder):
                     shutil.rmtree(folder, ignore_errors=True)
+            # Also free cached QR image
+            qr_cache.pop(code, None)
 
 threading.Thread(target=cleanup_expired_data, daemon=True).start()
+
+# ── Persistent HTTP session for keep-alive pings ──
+_http_session = requests.Session()
 
 def keep_awake():
     while True:
@@ -62,11 +78,24 @@ def keep_awake():
                 url = f"https://{render_host}/health"
             else:
                 url = "http://127.0.0.1:5000/health"
-            requests.get(url, timeout=10)
+            _http_session.get(url, timeout=10)
         except Exception as e:
             print(f"Health ping failed: {e}")
 
 threading.Thread(target=keep_awake, daemon=True).start()
+
+# ── Request timing middleware ──
+@app.before_request
+def start_timer():
+    request._start_time = time.time()
+
+@app.after_request
+def log_request_time(response):
+    if hasattr(request, '_start_time'):
+        elapsed = (time.time() - request._start_time) * 1000
+        if elapsed > 100:  # only log slow requests (>100ms)
+            app.logger.warning(f"SLOW {request.method} {request.path} — {elapsed:.0f}ms")
+    return response
 
 @app.route('/health')
 def health():
@@ -86,7 +115,8 @@ def upload_text():
     code = generate_code()
     if not code:
         return jsonify({'error': 'Server full'}), 503
-    data_store[code] = {'type': 'text', 'content': text, 'expires_at': time.time() + ttl_mins * 60}
+    with data_store_lock:
+        data_store[code] = {'type': 'text', 'content': text, 'expires_at': time.time() + ttl_mins * 60}
     return jsonify({'code': code})
 
 @app.route('/upload_file', methods=['POST'])
@@ -104,7 +134,8 @@ def upload_file():
         os.makedirs(folder, exist_ok=True)
         path = os.path.join(folder, filename)
         file.save(path)
-        data_store[code] = {'type': 'file', 'content': path, 'filename': filename, 'expires_at': time.time() + ttl_mins * 60}
+        with data_store_lock:
+            data_store[code] = {'type': 'file', 'content': path, 'filename': filename, 'expires_at': time.time() + ttl_mins * 60}
         return jsonify({'code': code})
     return "Invalid file type or no file uploaded", 400
 
@@ -119,23 +150,28 @@ def upload_files():
     if not code:
         return jsonify({'error': 'Server full'}), 503
     
+    # Create folder once, not per-file
+    folder = os.path.join(app.config['UPLOAD_FOLDER'], code)
+    os.makedirs(folder, exist_ok=True)
+
     saved = []
     for file in files:
         if file and file.filename and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            folder = os.path.join(app.config['UPLOAD_FOLDER'], code)
-            os.makedirs(folder, exist_ok=True)
             path = os.path.join(folder, filename)
             file.save(path)
             saved.append({'filename': filename, 'path': path})
 
     if not saved:
+        # Clean up the empty folder we created
+        shutil.rmtree(folder, ignore_errors=True)
         return jsonify({'error': 'No valid files uploaded'}), 400
 
-    if len(saved) == 1:
-        data_store[code] = {'type': 'file', 'content': saved[0]['path'], 'filename': saved[0]['filename'], 'expires_at': time.time() + ttl_mins * 60}
-    else:
-        data_store[code] = {'type': 'multi_file', 'files': saved, 'expires_at': time.time() + ttl_mins * 60}
+    with data_store_lock:
+        if len(saved) == 1:
+            data_store[code] = {'type': 'file', 'content': saved[0]['path'], 'filename': saved[0]['filename'], 'expires_at': time.time() + ttl_mins * 60}
+        else:
+            data_store[code] = {'type': 'multi_file', 'files': saved, 'expires_at': time.time() + ttl_mins * 60}
     return jsonify({'code': code})
 
 @app.route('/get/<code>')
@@ -143,7 +179,9 @@ def get_data(code):
     data = data_store.get(code)
     if not data or ('expires_at' in data and time.time() > data['expires_at']):
         if data:
-            data_store.pop(code, None)
+            with data_store_lock:
+                data_store.pop(code, None)
+            qr_cache.pop(code, None)
             if data['type'] in ('file', 'multi_file'):
                 folder = os.path.join(app.config['UPLOAD_FOLDER'], code)
                 if os.path.exists(folder):
@@ -175,22 +213,32 @@ def download_zip(code):
     if not data or data['type'] != 'multi_file':
         return "Bundle not found", 404
 
+    # Use ZIP_STORED (no compression) — much faster for already-compressed files
+    # like images, PDFs, MP4s which are the majority of uploads
     zip_buffer = io.BytesIO()
-    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_STORED) as zf:
         for file_entry in data['files']:
             zf.write(file_entry['path'], arcname=file_entry['filename'])
 
     zip_buffer.seek(0)
-    return send_file(
+
+    # Add Content-Length so browsers show real download progress
+    response = make_response(send_file(
         zip_buffer,
         mimetype='application/zip',
         as_attachment=True,
         download_name=f'clipshare_{code}.zip'
-    )
+    ))
+    response.headers['Content-Length'] = zip_buffer.getbuffer().nbytes
+    return response
 
 
 @app.route('/qr/<code>')
 def generate_qr(code):
+    # Serve from cache if available (eliminates repeated CPU-heavy QR generation)
+    if code in qr_cache:
+        return send_file(io.BytesIO(qr_cache[code]), mimetype='image/png')
+
     url = request.host_url + 'get/' + code
     
     qr = qrcode.QRCode(
@@ -205,7 +253,7 @@ def generate_qr(code):
     try:
         # Fetch the monster avatar
         avatar_url = f"https://robohash.org/{code}.png?set=set2&size=100x100"
-        response = requests.get(avatar_url, timeout=2.0)
+        response = _http_session.get(avatar_url, timeout=0.5)
         response.raise_for_status()
         
         logo = Image.open(io.BytesIO(response.content)).convert("RGBA")
@@ -227,8 +275,12 @@ def generate_qr(code):
 
     img_io = io.BytesIO()
     img.save(img_io, 'PNG')
-    img_io.seek(0)
-    return send_file(img_io, mimetype='image/png')
+    qr_bytes = img_io.getvalue()
+
+    # Cache the rendered QR for subsequent requests
+    qr_cache[code] = qr_bytes
+
+    return send_file(io.BytesIO(qr_bytes), mimetype='image/png')
 
 if __name__ == '__main__':
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)

@@ -75,16 +75,21 @@ clipshare/
 
 
 ### 🔹 Upload Page - Share Link / QR
-![Upload Screenshot](readmeimg/1.jpeg)
+<img width="1470" height="927" alt="image" src="https://github.com/user-attachments/assets/78962314-fd17-4ddf-bc38-b7d6ee423041" />
+
+
 
 ### 🔹 Receive Page
-![Receive Page Code Screenshot](readmeimg/2.png)
+<img width="1470" height="934" alt="image" src="https://github.com/user-attachments/assets/826f863c-f76c-47ab-acaa-ce2dda7a35d1" />
+
 
 ### 🔹 Received Text
-![Receive Text Screenshot](readmeimg/3.png)
+<img width="1470" height="926" alt="image" src="https://github.com/user-attachments/assets/7a261756-36d8-4523-98b9-a5bbf4229f55" />
+<img width="1470" height="917" alt="image" src="https://github.com/user-attachments/assets/3e6d7201-877a-4de7-a347-f210c255c371" />
+
 
 ### 🔹 Received File
-![Receive File Screenshot](readmeimg/4.png)
+<img width="1039" height="714" alt="image" src="https://github.com/user-attachments/assets/cd4cfc16-22ec-4654-86be-077857abedd5" />
 
 
 
